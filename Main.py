@@ -1,6 +1,7 @@
 # Example file showing a basic pygame "game loop"
 import pygame
 import json
+from random import randint
 from GameState import GameState
 from GameBoardWindows import GameBoardWindows
 from Player import Player
@@ -15,6 +16,9 @@ with open("gameboard.json") as gameboard_data:
 gameboard = gameboard_json["gameboard"]
 
 round_number = 1
+
+random_dice_value_one : int = 0
+random_dice_value_two : int = 0
 
 gameboard_window : GameBoardWindows = GameBoardWindows(gameboard)
 
@@ -207,8 +211,11 @@ def drawFight() -> None:
 
         i += 1030
 
-    pygame.draw.rect(screen, (100,255,100), (30,470,185,30))
-    pygame.draw.rect(screen, (100,255,100), (1060,470,185,30))
+    pygame.draw.rect(screen, (100,200,100), (30,470,200,30))
+    pygame.draw.rect(screen, (100,200,100), (1060,470,200,30))
+    screen.blit(myfont_big.render(str(random_dice_value_one), 1, (255,0,0)), (375,230))
+    screen.blit(myfont_big.render(str(random_dice_value_two), 1, (255,0,0)), (902,230))
+
 
 def isCellOccuped(pos : tuple) -> bool:
     """Check if the cell is occuped by a player
@@ -235,6 +242,16 @@ def getPlayerByNum(num : int) -> Player:
         if p._number == num:
             return p
     return None        
+
+def drawDice(pos : tuple, face_to_display : int):
+    """Draw dice with the number 'display'
+
+    Args:
+        pos (tuple): pos of the dice
+        face_to_display (int): 1 -> 6
+    """
+    screen.blit(pygame.image.load("./assets/png/" + str(face_to_display) + ".png").convert_alpha(), pos)
+
 
 # pygame setup
 pygame.init()
@@ -269,7 +286,6 @@ while running:
                     for p in list_players:
                         if p._number == round_number:
                             p.movePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos()))
-
                 
                 # If the end turn btn is pressed
                 if (getButtonPressed(pygame.mouse.get_pos(), (993, 630), (277,68))):
@@ -332,8 +348,11 @@ while running:
                     GAMESTATUS = GameState.CHOOSEMENU
             elif GAMESTATUS == GameState.FIGHT:
                 # Player left button
-                if getButtonPressed(pygame.mouse.get_pos(), (400,250), (100,100)):
-                    pass
+                #TODO Check if the 2 players have been played and return to the game
+                if getButtonPressed(pygame.mouse.get_pos(), (30,470), (200,30)):
+                    random_dice_value_one = randint(1,6)
+                elif getButtonPressed(pygame.mouse.get_pos(), (1060,470), (200,30)):
+                    random_dice_value_two = randint(1,6)
 
     # If player is not defined, pass round automaticaly
     if getPlayerByNum(round_number)._typeofclass == "UNDEFINED":
@@ -364,6 +383,8 @@ while running:
                 drawUI(p)
     elif GAMESTATUS == GameState.FIGHT:
         drawFight()
+        drawDice((350,325), random_dice_value_one)
+        drawDice((875,325), random_dice_value_two)
 
     # RENDER YOUR GAME HERE
 
