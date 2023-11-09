@@ -33,6 +33,9 @@ list_players : list[Player] = [playerOne, playerTwo, playerThree, playerFour]
 
 list_fighting_players : list[Player] = []
 
+playerLeftWinned : bool = False
+playerRightWinned : bool = False
+
 def drawMenu() -> None:
     """Draw menu
     """
@@ -154,6 +157,11 @@ def getCaseByPosition(gameboard_pos : tuple) -> str:
         return(gameboard[gameboard_pos[0]][gameboard_pos[1]])
 
 def drawChooseTypeOfPlayer(nb_player : int):
+    """Draw Choose type of player menu
+
+    Args:
+        nb_player (int): number of player
+    """
     #Fond
     pygame.draw.rect(screen, (100,100,100), (400,100,500,500))
     screen.blit(myfont_big.render(str(nb_player), 1, (255,255,255)), (640, 125))
@@ -169,6 +177,11 @@ def drawChooseTypeOfPlayer(nb_player : int):
     screen.blit(myfont.render("Retour", 1, (255,255,255)), (610,525))
 
 def drawUI(player : Player) -> None:
+    """Draw UI with player info
+
+    Args:
+        player (Player): player
+    """
     
     label = myfont.render("Au tour du joueur : " + str(player._number), 1, (0,0,0))
     screen.blit(label, (10, 100))
@@ -192,6 +205,8 @@ def drawUI(player : Player) -> None:
     screen.blit(pygame.image.load("./assets/png/end_round.png").convert_alpha(), (993, 630))
 
 def drawFight() -> None:
+    """Draw fight
+    """
     i = 0
     for player in list_fighting_players:
 
@@ -216,7 +231,6 @@ def drawFight() -> None:
     screen.blit(myfont_big.render(str(random_dice_value_one), 1, (255,0,0)), (375,230))
     screen.blit(myfont_big.render(str(random_dice_value_two), 1, (255,0,0)), (902,230))
 
-
 def isCellOccuped(pos : tuple) -> bool:
     """Check if the cell is occuped by a player
 
@@ -232,12 +246,28 @@ def isCellOccuped(pos : tuple) -> bool:
     return False
 
 def getPlayerByPos(pos : tuple) -> Player:
+    """Get player by position
+
+    Args:
+        pos (tuple): position in gameboard
+
+    Returns:
+        Player: player
+    """
     for p in list_players:
         if (p._pos == pos):
             return p
     return None
 
 def getPlayerByNum(num : int) -> Player:
+    """Get player by his num
+
+    Args:
+        num (int): number of player targetes
+
+    Returns:
+        Player: Player
+    """
     for p in list_players:
         if p._number == num:
             return p
@@ -251,6 +281,30 @@ def drawDice(pos : tuple, face_to_display : int):
         face_to_display (int): 1 -> 6
     """
     screen.blit(pygame.image.load("./assets/png/" + str(face_to_display) + ".png").convert_alpha(), pos)
+
+def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameState, bool, bool, list[Player], int, int):
+    """Draw the winner of the fight and RESET value to go to gameboard
+    """
+    if len(list_fighting_players) == 2:
+        if playerLeftWinned == True:
+            screen.blit(myfont_big.render("Le joueur " + str(list_fighting_players[0]._number) + " a gagné !", 1, (100,100,100)), (400, 125))
+            list_fighting_players[0].attack(list_fighting_players[1])
+            pygame.display.flip()
+            pygame.time.delay(4000)
+            playerLeftWinned = False
+            list_fighting_players.clear()
+            return (GameState.GAMELAUNCHED, playerLeftWinned, playerRightWinned, list_fighting_players, 0, 0)
+
+        if playerRightWinned == True:
+            screen.blit(myfont_big.render("Le joueur " + str(list_fighting_players[1]._number) + " a gagné !", 1, (100,100,100)), (400, 125))
+            list_fighting_players[1].attack(list_fighting_players[0])
+            pygame.display.flip()
+            pygame.time.delay(4000)
+            playerRightWinned = False
+            list_fighting_players.clear()
+            return (GameState.GAMELAUNCHED, playerLeftWinned, playerRightWinned, list_fighting_players, 0, 0)
+    
+    return (GameState.FIGHT, playerLeftWinned, playerRightWinned, list_fighting_players, random_dice_value_one, random_dice_value_two)
 
 
 # pygame setup
@@ -353,6 +407,12 @@ while running:
                     random_dice_value_one = randint(1,6)
                 elif getButtonPressed(pygame.mouse.get_pos(), (1060,470), (200,30)):
                     random_dice_value_two = randint(1,6)
+                # If the 2 dices have been rolled
+                if random_dice_value_one != 0 and random_dice_value_two != 0:
+                    if random_dice_value_two < random_dice_value_one:
+                        playerLeftWinned = True
+                    else:
+                        playerRightWinned = True
 
     # If player is not defined, pass round automaticaly
     if getPlayerByNum(round_number)._typeofclass == "UNDEFINED":
@@ -385,6 +445,7 @@ while running:
         drawFight()
         drawDice((350,325), random_dice_value_one)
         drawDice((875,325), random_dice_value_two)
+        GAMESTATUS, playerLeftWinned, playerRightWinned, list_fighting_players, random_dice_value_one, random_dice_value_two = drawWinnerFight(playerLeftWinned, playerRightWinned)
 
     # RENDER YOUR GAME HERE
 

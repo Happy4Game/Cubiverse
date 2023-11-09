@@ -11,6 +11,8 @@ Dans le jeu, il existe 2 type de classes, vous pouvez être:
 - Mineur : vous commencez d'avance avec une pierre précieuse
 - Combattant : vous infligez plus de dégats face à vos adversaires
 
+Lors d'un combat, le gagnant "vole" la pierre précieuse de son adversaire.
+Si votre vie arrive à 0, vous revenez à votre point de départ.
 
 
 
