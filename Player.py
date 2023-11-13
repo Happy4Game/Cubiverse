@@ -34,12 +34,45 @@ class Player():
         elif type == "CHOOSING":
             self._typeofclass = type
 
+    def die(self):
+        """Reset life and pos of the player
+        """
+        self._health : int = 30
+        if self._number == 1:
+            self.movePlayer((6,1))
+        elif self._number == 2:
+            self.movePlayer((6,12))
+        elif self._number == 3:
+            self.movePlayer((1,6))
+        elif self._number == 4:
+            self.movePlayer((12,6))
 
     def attack(self, p : Player) -> None:
         p._health = p._health - self._attack
+        if p._health <= 0:
+            p.die()
 
     def resetMaxMovement(self) -> None:
         self._maxrange = 3
+
+    def canMovePlayer(self, newPos : tuple) -> bool:
+        if newPos != None:
+            
+            if self._pos[0] - self._maxrange <= newPos[0] <= self._pos[0] + self._maxrange:
+                if self._pos[1] - self._maxrange <= newPos[1] <= self._pos[1] + self._maxrange:
+                    
+                    nb_movement = abs(self._pos[0] - newPos[0]) + abs(self._pos[1] - newPos[1])
+                    if nb_movement <= 3:
+
+                        # Remove typeingameboard of gameboard
+                        self._gameboard_window._gameboard[self._pos[0]][self._pos[1]] = self._gameboard_window._gameboard[self._pos[0]][self._pos[1]].replace(self._typeingameboard, "")
+                        # Add typeingameboard for the new pos
+                        self._gameboard_window._gameboard[newPos[0]][newPos[1]] += self._typeingameboard
+                        
+                        self._pos = newPos
+                        self._maxrange -= nb_movement
+                        return True
+            return False
 
     def movePlayer(self, newPos : tuple) -> int:
         """Move the player and return the amount of movement
