@@ -198,6 +198,9 @@ def drawUI(player : Player) -> None:
     label = myfont_little.render("Point de mouvement : " + str(player._maxrange), 1, (0,0,0))
     screen.blit(label, (10, 185))
     
+    label = myfont_little.render("Nombre d'items : " + str(len(player._inventory)), 1, (0,0,0))
+    screen.blit(label, (10, 205))
+
     # Draw red box
     screen.blit(pygame.image.load("./assets/png/select.png").convert_alpha(), getGameBoardPositionByCase(player._pos))
 
@@ -244,6 +247,9 @@ def isCellOccuped(pos : tuple) -> bool:
         if (p._pos == pos):
             return True
     return False
+
+def getCell(pos : tuple) -> str:
+    return gameboard[pos[0]][pos[1]]
 
 def getPlayerByPos(pos : tuple) -> Player:
     """Get player by position
@@ -329,17 +335,19 @@ while running:
         if event.type == pygame.MOUSEBUTTONDOWN:
             if GAMESTATUS == GameState.GAMELAUNCHED:
 
-                # If a player is in mouse pos
+                # If a player is in mouse pos                
                 if isCellOccuped(getGameBoardPositionByMouse(pygame.mouse.get_pos())) and getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))._number != round_number:
-                    list_fighting_players.append((getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))))
-                    list_fighting_players.append(getPlayerByNum(round_number))
-                    GAMESTATUS = GameState.FIGHT
+                    #Fight
+                    if getCell(getGameBoardPositionByMouse(pygame.mouse.get_pos())).endswith("_p_fighter") or getCell(getGameBoardPositionByMouse(pygame.mouse.get_pos())).endswith("_p_minor"):
+                        list_fighting_players.append((getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))))
+                        list_fighting_players.append(getPlayerByNum(round_number))
+                        GAMESTATUS = GameState.FIGHT
+                    
 
                 else:
-                    # Try to move player if it's their round
-                    for p in list_players:
-                        if p._number == round_number:
-                            p.movePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos()))
+                    # Move player if it's their round
+                    getPlayerByNum(round_number).movePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos()))
+                    
                 
                 # If the end turn btn is pressed
                 if (getButtonPressed(pygame.mouse.get_pos(), (993, 630), (277,68))):

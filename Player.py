@@ -38,6 +38,7 @@ class Player():
         """Reset life and pos of the player
         """
         self._health : int = 30
+        self._inventory.pop()
         if self._number == 1:
             self.movePlayer((6,1))
         elif self._number == 2:
@@ -92,6 +93,10 @@ class Player():
                     if nb_movement <= 3:
 
                         # Remove typeingameboard of gameboard
+                        if (self._gameboard_window._gameboard[self._pos[0]][self._pos[1]].startswith("res")):
+                            self._inventory.append("res")
+                            self._gameboard_window._gameboard[self._pos[0]][self._pos[1]] = "g"
+
                         self._gameboard_window._gameboard[self._pos[0]][self._pos[1]] = self._gameboard_window._gameboard[self._pos[0]][self._pos[1]].replace(self._typeingameboard, "")
                         # Add typeingameboard for the new pos
                         self._gameboard_window._gameboard[newPos[0]][newPos[1]] += self._typeingameboard

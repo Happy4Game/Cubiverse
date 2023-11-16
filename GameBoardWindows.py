@@ -28,6 +28,8 @@ class GameBoardWindows():
                     screen.blit(pygame.image.load("./assets/png/bed_part_two.png").convert_alpha(), coordinate)
                 elif str(self._gameboard[i][j]).startswith("m"):
                     screen.blit(pygame.image.load("./assets/png/lugubrious_mine.png").convert_alpha(), coordinate)
+                elif str(self._gameboard[i][j]).startswith("res"):
+                    screen.blit(pygame.image.load("./assets/png/res.png").convert_alpha(), coordinate)
 
                 # Render player
                 if str(self._gameboard[i][j]).endswith("_p_fighter"):

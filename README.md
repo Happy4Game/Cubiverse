@@ -18,6 +18,7 @@ Si votre vie arrive à 0, vous revenez à votre point de départ (votre lit).
 
 # How gameboard.js work ?
 - "g" is for grass
+- "m" is for finish the game
 - "b_one" is for bed part one
 - "b_two" is for bed part two
 - "b_one_r" is for bed part one rotated
