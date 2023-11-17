@@ -15,8 +15,10 @@ Lors d'un combat, le gagnant "vole" la pierre précieuse de son adversaire.
 Si votre vie arrive à 0, vous revenez à votre point de départ (votre lit).
 
 
+## Installation
+Pour lancer le programme, vous devez avoir python installé sur votre machine, le package "pygame" est aussi à installer
 
-# How gameboard.js work ?
+## How gameboard.js work ?
 - "g" is for grass
 - "m" is for finish the game
 - "b_one" is for bed part one

@@ -3,15 +3,15 @@ import GameBoardWindows
 
 class Player():
     def __init__(self, number : int, gameboard_window : GameBoardWindows, typeofclass : str = "UNDEFINED") -> None:
-        self._number : int = number
-        self._inventory : list = []
-        self._typeofclass : str = "UNDEFINED" # Can be UNDEFINED, CHOOSING, MINOR or FIGHTER
-        self._gameboard_window = gameboard_window
-        self._typeingameboard : str = ""
-        self._health : int = 30
-        self._attack : int = 10
-        self._pos = (0,0)
-        self._maxrange : int = 3
+        self._number : int              = number
+        self._inventory : list          = []
+        self._typeofclass : str         = "UNDEFINED" # Can be UNDEFINED, CHOOSING, MINOR or FIGHTER
+        self._gameboard_window          = gameboard_window
+        self._typeingameboard : str     = ""
+        self._health : int              = 30
+        self._attack : int              = 10
+        self._pos                       = (0,0)
+        self._maxrange : int            = 3
         if self._number == 1:
             self._pos = (6,1)
         elif self._number == 2:
@@ -25,12 +25,12 @@ class Player():
 
     def setTypeOfClass(self, type : str):
         if type == "MINOR":
-            self._typeofclass = type
-            self._typeingameboard = "_p_minor"
+            self._typeofclass       = type
+            self._typeingameboard   = "_p_minor"
         elif type == "FIGHTER":
-            self._attack = self._attack * 1.5
-            self._typeofclass  = type
-            self._typeingameboard = "_p_fighter"
+            self._attack            = self._attack * 1.5
+            self._typeofclass       = type
+            self._typeingameboard   = "_p_fighter"
         elif type == "CHOOSING":
             self._typeofclass = type
 
@@ -93,9 +93,9 @@ class Player():
                     if nb_movement <= 3:
 
                         # Remove typeingameboard of gameboard
-                        if (self._gameboard_window._gameboard[self._pos[0]][self._pos[1]].startswith("res")):
+                        if (self._gameboard_window._gameboard[newPos[0]][newPos[1]].startswith("res")):
                             self._inventory.append("res")
-                            self._gameboard_window._gameboard[self._pos[0]][self._pos[1]] = "g"
+                            self._gameboard_window._gameboard[newPos[0]][newPos[1]] = "g"
 
                         self._gameboard_window._gameboard[self._pos[0]][self._pos[1]] = self._gameboard_window._gameboard[self._pos[0]][self._pos[1]].replace(self._typeingameboard, "")
                         # Add typeingameboard for the new pos

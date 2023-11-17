@@ -295,6 +295,9 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
         if playerLeftWinned == True:
             screen.blit(myfont_big.render("Le joueur " + str(list_fighting_players[0]._number) + " a gagné !", 1, (100,100,100)), (400, 125))
             list_fighting_players[0].attack(list_fighting_players[1])
+            if len(list_fighting_players[1]._inventory) >= 1:
+                list_fighting_players[1]._inventory.pop()
+                list_fighting_players[0]._inventory.append("res")
             pygame.display.flip()
             pygame.time.delay(4000)
             playerLeftWinned = False
@@ -304,6 +307,9 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
         if playerRightWinned == True:
             screen.blit(myfont_big.render("Le joueur " + str(list_fighting_players[1]._number) + " a gagné !", 1, (100,100,100)), (400, 125))
             list_fighting_players[1].attack(list_fighting_players[0])
+            if len(list_fighting_players[0]._inventory) >= 1:
+                list_fighting_players[0]._inventory.pop()
+                list_fighting_players[1]._inventory.append("res")
             pygame.display.flip()
             pygame.time.delay(4000)
             playerRightWinned = False
@@ -316,12 +322,12 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
 # pygame setup
 pygame.init()
 # initialize font; must be called after 'pygame.init()' to avoid 'Font not Initialized' error
-myfont : pygame.font = pygame.font.SysFont("monospace", 20)
+myfont : pygame.font        = pygame.font.SysFont("monospace", 20)
 myfont_little : pygame.font = pygame.font.SysFont("monospace", 16)
-myfont_big : pygame.font = pygame.font.SysFont("monospace", 40)
+myfont_big : pygame.font    = pygame.font.SysFont("monospace", 40)
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-clock = pygame.time.Clock()
+screen  = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock   = pygame.time.Clock()
 running = True
 
 
