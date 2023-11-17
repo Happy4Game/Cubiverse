@@ -16,7 +16,7 @@ Si votre vie arrive à 0, vous revenez à votre point de départ (votre lit).
 
 
 ## Installation
-Pour lancer le programme, vous devez avoir python installé sur votre machine, le package "pygame" est aussi à installer
+Pour lancer le programme, vous devez avoir python installé sur votre machine, le package "pygame" est aussi à installer.
 
 ## How gameboard.js work ?
 - "g" is for grass
