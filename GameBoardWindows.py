@@ -1,11 +1,24 @@
 import pygame
 import Player
+from random import randint
 
 class GameBoardWindows():
     def __init__(self, gameboard : list) -> None:
         
         self._gameboard = gameboard
-        
+        self.putRandomRes()
+
+    def putRandomRes(self):
+        numberOfRes : int = 12
+        r_one : int
+        r_two : int
+        while numberOfRes > 0:
+            r_one = randint(1, len(self._gameboard) - 1)
+            r_two = randint(1, len(self._gameboard) - 1)
+            if str(self._gameboard[r_one][r_two]).startswith("g"):
+                self._gameboard[r_one][r_two] = "res"
+                numberOfRes -= 1
+
         
     def drawGameboard(self, screen):
         """Draw the gameboard at the screen
