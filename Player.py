@@ -3,6 +3,13 @@ import GameBoardWindows
 
 class Player():
     def __init__(self, number : int, gameboard_window : GameBoardWindows, typeofclass : str = "UNDEFINED") -> None:
+        """Init player
+
+        Args:
+            number (int): number of the player
+            gameboard_window (GameBoardWindows): GameBoardWindows
+            typeofclass (str, optional): Can be UNDEFINED, CHOOSING, MINOR or FIGHTER. Defaults to "UNDEFINED".
+        """
         self._number : int              = number
         self._inventory : list          = []
         self._typeofclass : str         = "UNDEFINED" # Can be UNDEFINED, CHOOSING, MINOR or FIGHTER
@@ -26,6 +33,11 @@ class Player():
         self.setTypeOfClass(typeofclass)
 
     def setTypeOfClass(self, type : str):
+        """Set the type of the class
+
+        Args:
+            type (str): Type of the class, see __init__
+        """
         if type == "MINOR":
             self._typeofclass       = type
             self._typeingameboard   = "_p_minor"
@@ -51,6 +63,11 @@ class Player():
             self.movePlayer((12,6))
 
     def attack(self, p : Player) -> None:
+        """Self attack the p Player
+
+        Args:
+            p (Player): Player attacked
+        """
         p._health = p._health - self._attack
         if p._health <= 0:
             p.die()
@@ -58,9 +75,19 @@ class Player():
         p._canFight = True
 
     def resetMaxMovement(self) -> None:
+        """Reset the max_range of the player
+        """
         self._maxrange = 3
 
     def canMovePlayer(self, newPos : tuple) -> bool:
+        """See if the player can move or not
+
+        Args:
+            newPos (tuple): position to try
+
+        Returns:
+            bool: True if the player can, False if not
+        """
         if newPos != None:
             
             if self._pos[0] - self._maxrange <= newPos[0] <= self._pos[0] + self._maxrange:

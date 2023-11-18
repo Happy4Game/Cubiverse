@@ -22,6 +22,9 @@ Une fois toutes les pierres collectées, rendez-vous au centre de la carte
 ## Installation
 Pour lancer le programme, vous devez avoir python installé sur votre machine, le package "pygame" est aussi à installer.
 
+## Petit +
+Si le souhaitez, il est possible de consulter la documentation technique de ce jeu, pour cela, rendez vous sur le fichier index.html dans le dossier doc
+
 ## How gameboard.js work ?
 - "g" is for grass
 - "m" is for finish the game
