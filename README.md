@@ -14,6 +14,10 @@ Dans le jeu, il existe 2 type de classes, vous pouvez être:
 Lors d'un combat, le gagnant "vole" la pierre précieuse de son adversaire.
 Si votre vie arrive à 0, vous revenez à votre point de départ (votre lit).
 
+## Jeu
+Lors du démmarrage du jeu, vous pouvez choisir votre classe, mineur ou combattant, une fois choisis, vous commencez le jeu
+Vous avez alors 2 choix, ou vous combattez votre adversaire, ou vous vous déplacez à la recherche des pierres précieuses
+Une fois toutes les pierres collectées, rendez-vous au centre de la carte
 
 ## Installation
 Pour lancer le programme, vous devez avoir python installé sur votre machine, le package "pygame" est aussi à installer.

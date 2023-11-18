@@ -12,6 +12,8 @@ class Player():
         self._attack : int              = 10
         self._pos                       = (0,0)
         self._maxrange : int            = 3
+        self._isWinner : bool           = False
+        self._canFight : bool           = True
         if self._number == 1:
             self._pos = (6,1)
         elif self._number == 2:
@@ -52,6 +54,8 @@ class Player():
         p._health = p._health - self._attack
         if p._health <= 0:
             p.die()
+        self._canFight = True
+        p._canFight = True
 
     def resetMaxMovement(self) -> None:
         self._maxrange = 3
@@ -93,9 +97,15 @@ class Player():
                     if nb_movement <= 3:
 
                         # Remove typeingameboard of gameboard
-                        if (self._gameboard_window._gameboard[newPos[0]][newPos[1]].startswith("res")):
+                        if self._gameboard_window._gameboard[newPos[0]][newPos[1]].startswith("res"):
                             self._inventory.append("res")
                             self._gameboard_window._gameboard[newPos[0]][newPos[1]] = "g"
+
+                        elif self._gameboard_window._gameboard[newPos[0]][newPos[1]].startswith("m"):
+                            #TODO Win
+                            if len(self._inventory) >= 4:
+                                self._isWinner = True
+                            return 0
 
                         self._gameboard_window._gameboard[self._pos[0]][self._pos[1]] = self._gameboard_window._gameboard[self._pos[0]][self._pos[1]].replace(self._typeingameboard, "")
                         # Add typeingameboard for the new pos

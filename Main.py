@@ -298,6 +298,7 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
             if len(list_fighting_players[1]._inventory) >= 1:
                 list_fighting_players[1]._inventory.pop()
                 list_fighting_players[0]._inventory.append("res")
+            list_fighting_players[0]._maxrange = 0
             pygame.display.flip()
             pygame.time.delay(4000)
             playerLeftWinned = False
@@ -310,6 +311,7 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
             if len(list_fighting_players[0]._inventory) >= 1:
                 list_fighting_players[0]._inventory.pop()
                 list_fighting_players[1]._inventory.append("res")
+            list_fighting_players[1]._maxrange = 0
             pygame.display.flip()
             pygame.time.delay(4000)
             playerRightWinned = False
@@ -345,14 +347,18 @@ while running:
                 if isCellOccuped(getGameBoardPositionByMouse(pygame.mouse.get_pos())) and getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))._number != round_number:
                     #Fight
                     if getCell(getGameBoardPositionByMouse(pygame.mouse.get_pos())).endswith("_p_fighter") or getCell(getGameBoardPositionByMouse(pygame.mouse.get_pos())).endswith("_p_minor"):
-                        list_fighting_players.append((getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))))
-                        list_fighting_players.append(getPlayerByNum(round_number))
-                        GAMESTATUS = GameState.FIGHT
+                        # If they can fight
+                        if getPlayerByNum(round_number)._canFight == True:
+                            list_fighting_players.append((getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))))
+                            list_fighting_players.append(getPlayerByNum(round_number))
+                            GAMESTATUS = GameState.FIGHT
                     
 
                 else:
                     # Move player if it's their round
                     getPlayerByNum(round_number).movePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos()))
+                    # Disable Fight option
+                    getPlayerByNum(round_number)._canFight = False
                     
                 
                 # If the end turn btn is pressed
@@ -451,10 +457,16 @@ while running:
         else:                                       GAMESTATUS = GameState.CHOOSEMENU
     elif GAMESTATUS == GameState.GAMELAUNCHED:
         gameboard_window.drawGameboard(screen)
-        # Draw UI for good player
-        for p in list_players:
-            if p._number == round_number:
-                drawUI(p)
+
+        # If a player is the winner
+        if getPlayerByNum(round_number)._isWinner == True:
+            # Winned !
+            screen.blit(myfont_big.render("Le joueur " + str(round_number) + " a gagné !", 1, (255,100,100)), (400, 125))
+        else:
+            # Draw UI for good player
+            for p in list_players:
+                if p._number == round_number:
+                    drawUI(p)
     elif GAMESTATUS == GameState.FIGHT:
         drawFight()
         drawDice((350,325), random_dice_value_one)
