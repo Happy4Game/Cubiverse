@@ -230,7 +230,11 @@ def drawFight() -> None:
         i += 1030
 
     pygame.draw.rect(screen, (100,200,100), (30,470,200,30))
+    label = myfont_little.render("Lancer le dé", 1, (230,230,230))
+    screen.blit(label, (70, 475))
     pygame.draw.rect(screen, (100,200,100), (1060,470,200,30))
+    label = myfont_little.render("Lancer le dé", 1, (230,230,230))
+    screen.blit(label, (1100, 475))
     screen.blit(myfont_big.render(str(random_dice_value_one), 1, (255,0,0)), (375,230))
     screen.blit(myfont_big.render(str(random_dice_value_two), 1, (255,0,0)), (902,230))
 
@@ -355,21 +359,29 @@ while running:
                     
 
                 else:
-                    # Move player if it's their round
-                    getPlayerByNum(round_number).movePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos()))
-                    # Disable Fight option
-                    getPlayerByNum(round_number)._canFight = False
+                    if getPlayerByNum(round_number).canMovePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos())):
+                        # Move player if it's their round
+                        getPlayerByNum(round_number).movePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos()))
+                        # Disable Fight option
+                        getPlayerByNum(round_number)._canFight = False
                     
                 
                 # If the end turn btn is pressed
                 if (getButtonPressed(pygame.mouse.get_pos(), (993, 630), (277,68))):
                     if round_number + 1 > 4:    
                         playerFour.resetMaxMovement()
+                        playerFour._canFight = True
                         round_number = 1
                     else:
-                        if round_number == 1: playerOne.resetMaxMovement()
-                        elif round_number == 2: playerTwo.resetMaxMovement()
-                        elif round_number == 3: playerThree.resetMaxMovement()
+                        if round_number == 1: 
+                            playerOne.resetMaxMovement()
+                            playerOne._canFight = True
+                        elif round_number == 2:
+                            playerTwo.resetMaxMovement()
+                            playerTwo._canFight = True
+                        elif round_number == 3:
+                            playerThree.resetMaxMovement()
+                            playerThree._canFight = True
                         round_number += 1      
             elif GAMESTATUS == GameState.CHOOSEMENU:
                 # Player 1 button
