@@ -1,5 +1,5 @@
 # Cubiverse
-Bienvenue dans le **Cubiverse**, dans ce jeu de plateau, l'objectif est de réunir 3 pierres précieuses au temple sacré.
+Bienvenue dans le **Cubiverse**, dans ce jeu de plateau, l'objectif est de réunir 4 pierres précieuses au temple sacré.
 
 Pour y arriver, divers moyens existent, vous pouvez en obtenir de 2 façons différentes
 - Affronter un adversaire et lui voler une partie de ses ressources

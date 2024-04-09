@@ -52,7 +52,8 @@ class Player():
         """Reset life and pos of the player
         """
         self._health : int = 30
-        self._inventory.pop()
+        if len(self._inventory) > 0:
+            self._inventory.pop()
         if self._number == 1:
             self.movePlayer((6,1))
         elif self._number == 2:
