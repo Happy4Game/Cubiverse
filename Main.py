@@ -75,6 +75,10 @@ def drawPlayerImage(typeOfPlayer : str, coordinate : tuple) -> None:
         path = path + "pickaxe.png"
     elif typeOfPlayer == "FIGHTER":
         path = path + "sword.png"
+    elif typeOfPlayer == "IA_MINOR":
+        path = path + "ia_pickaxe.png"
+    elif typeOfPlayer == "IA_FIGHTER":
+        path = path + "ia_sword.png"
     else:
         return
     image = pygame.image.load(path).convert_alpha()
@@ -162,15 +166,21 @@ def drawChooseTypeOfPlayer(nb_player : int):
     Args:
         nb_player (int): number of player
     """
-    #Fond
+    # Background
     pygame.draw.rect(screen, (100,100,100), (400,100,500,500))
     screen.blit(myfont_big.render(str(nb_player), 1, (255,255,255)), (640, 125))
 
+    # Button minor IA
+    drawPlayerImage("IA_MINOR", (700, 225))
+
+    # Button sword IA
+    drawPlayerImage("IA_FIGHTER", (700, 350))
+
     # Button minor class
-    drawPlayerImage("MINOR", (600, 225))
+    drawPlayerImage("MINOR", (500, 225))
 
     # Button sword class
-    drawPlayerImage("FIGHTER", (600, 350))
+    drawPlayerImage("FIGHTER", (500, 350))
 
     # Button done
     pygame.draw.rect(screen, (255,0,0), (527,510,250,50))
@@ -418,17 +428,28 @@ while running:
                     # Launch game
                     GAMESTATUS = GameState.CHOOSEMENU
             elif GAMESTATUS == GameState.CHOOSEMENU_TYPE:
-                if getButtonPressed(pygame.mouse.get_pos(), (600, 225), (48*2,48*2)):
+                if getButtonPressed(pygame.mouse.get_pos(), (500, 225), (48*2,48*2)):
                     # The Choosing player is minor
                     for p in list_players:
                         if p._typeofclass == "CHOOSING":
                             p.setTypeOfClass("MINOR")
                   
-                elif getButtonPressed(pygame.mouse.get_pos(), (600, 350), (48*2,48*2)):
+                elif getButtonPressed(pygame.mouse.get_pos(), (500, 350), (48*2,48*2)):
                     # The Choosing player is fighter
                     for p in list_players:
                         if p._typeofclass == "CHOOSING":
                             p.setTypeOfClass("FIGHTER")
+                elif getButtonPressed(pygame.mouse.get_pos(), (700, 225), (48*2,48*2)):
+                    print("ia minor")
+                    # The Choosing player is ia_minor
+                    for p in list_players:
+                        if p._typeofclass == "CHOOSING":
+                            p.setTypeOfClass("IA_MINOR")
+                elif getButtonPressed(pygame.mouse.get_pos(), (700, 350), (48*2,48*2)):
+                    # The Choosing player is ia_fighter
+                    for p in list_players:
+                        if p._typeofclass == "CHOOSING":
+                            p.setTypeOfClass("IA_FIGHTER")
 
                 elif getButtonPressed(pygame.mouse.get_pos(), (527,510), (610,525)):
                     GAMESTATUS = GameState.CHOOSEMENU

@@ -49,6 +49,12 @@ class GameBoardWindows():
                     screen.blit(pygame.image.load("./assets/png/sword.png").convert_alpha(), coordinate)
                 if str(self._gameboard[i][j]).endswith("_p_minor"):
                     screen.blit(pygame.image.load("./assets/png/pickaxe.png").convert_alpha(), coordinate)
+
+                # Render ia player
+                if str(self._gameboard[i][j]).endswith("_p_ia_fighter"):
+                    screen.blit(pygame.image.load("./assets/png/ia_sword.png").convert_alpha(), coordinate)
+                if str(self._gameboard[i][j]).endswith("_p_ia_minor"):
+                    screen.blit(pygame.image.load("./assets/png/ia_pickaxe.png").convert_alpha(), coordinate)
                     
 
 

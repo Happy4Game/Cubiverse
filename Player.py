@@ -12,7 +12,7 @@ class Player():
         """
         self._number : int              = number
         self._inventory : list          = []
-        self._typeofclass : str         = "UNDEFINED" # Can be UNDEFINED, CHOOSING, MINOR or FIGHTER
+        self._typeofclass : str         = "UNDEFINED" # Can be UNDEFINED, CHOOSING, MINOR, FIGHTER, IA_MINOR or IA_FIGHTER
         self._gameboard_window          = gameboard_window
         self._typeingameboard : str     = ""
         self._health : int              = 30
@@ -45,6 +45,13 @@ class Player():
             self._attack            = self._attack * 1.5
             self._typeofclass       = type
             self._typeingameboard   = "_p_fighter"
+        elif type == "IA_FIGHTER":
+            self._attack            = self._attack * 1.5
+            self._typeofclass       = type
+            self._typeingameboard   = "_p_ia_fighter"
+        elif type == "IA_MINOR":
+            self._typeofclass       = type
+            self._typeingameboard   = "_p_ia_minor"
         elif type == "CHOOSING":
             self._typeofclass = type
 
