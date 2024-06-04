@@ -10,17 +10,10 @@ class Player():
             gameboard_window (GameBoardWindows): GameBoardWindows
             typeofclass (str, optional): Can be UNDEFINED, CHOOSING, MINOR or FIGHTER. Defaults to "UNDEFINED".
         """
+        self.init_common_stats()
         self._number : int              = number
-        self._inventory : list          = []
-        self._typeofclass : str         = "UNDEFINED" # Can be UNDEFINED, CHOOSING, MINOR, FIGHTER, IA_MINOR or IA_FIGHTER
         self._gameboard_window          = gameboard_window
-        self._typeingameboard : str     = ""
-        self._health : int              = 30
-        self._attack : int              = 10
         self._pos                       = (0,0)
-        self._maxrange : int            = 3
-        self._isWinner : bool           = False
-        self._canFight : bool           = True
         if self._number == 1:
             self._pos = (6,1)
         elif self._number == 2:
@@ -32,14 +25,27 @@ class Player():
 
         self.setTypeOfClass(typeofclass)
 
+    def init_common_stats(self):
+        self._inventory : list          = []
+        self._typeofclass : str         = "UNDEFINED" # Can be UNDEFINED, CHOOSING, MINOR, FIGHTER, IA_MINOR or IA_FIGHTER
+        self._typeingameboard : str     = ""
+        self._health : int              = 30
+        self._attack : int              = 10
+        self._maxrange : int            = 3
+        self._isWinner : bool           = False
+        self._canFight : bool           = True
+
+
     def setTypeOfClass(self, type : str):
         """Set the type of the class
 
         Args:
             type (str): Type of the class, see __init__
         """
+        self.init_common_stats()
         if type == "MINOR":
             self._typeofclass       = type
+            self._inventory.append("res")
             self._typeingameboard   = "_p_minor"
         elif type == "FIGHTER":
             self._attack            = self._attack * 1.5
@@ -51,9 +57,12 @@ class Player():
             self._typeingameboard   = "_p_ia_fighter"
         elif type == "IA_MINOR":
             self._typeofclass       = type
+            self._inventory.append("res")
             self._typeingameboard   = "_p_ia_minor"
         elif type == "CHOOSING":
             self._typeofclass = type
+        elif type == "UNDEFINED":
+            self.init_common_stats()
 
     def die(self):
         """Reset life and pos of the player

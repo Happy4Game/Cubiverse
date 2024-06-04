@@ -452,7 +452,11 @@ while running:
                             p.setTypeOfClass("IA_FIGHTER")
 
                 elif getButtonPressed(pygame.mouse.get_pos(), (527,510), (610,525)):
+                    for p in list_players:
+                        if p._typeofclass == "CHOOSING":
+                            p.setTypeOfClass("UNDEFINED")
                     GAMESTATUS = GameState.CHOOSEMENU
+                    
             elif GAMESTATUS == GameState.FIGHT:
                 # Player left button
                 #TODO Check if the 2 players have been played and return to the game
