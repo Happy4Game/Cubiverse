@@ -36,6 +36,14 @@ list_fighting_players : list[Player] = []
 playerLeftWinned : bool = False
 playerRightWinned : bool = False
 
+def debug(info : str, x : int = 10, y : int = 10):
+    font            = pygame.font.Font(None, 30)
+    display_surf    = pygame.display.get_surface()
+    debug_surf      = font.render(str(info), True, 'white')
+    debug_rect      = debug_surf.get_rect(topleft = (x,y))
+    pygame.draw.rect(display_surf, 'Black', debug_rect)
+    display_surf.blit(debug_surf, debug_rect)
+
 def drawMenu() -> None:
     """Draw menu
     """
@@ -366,8 +374,6 @@ while running:
                             list_fighting_players.append((getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))))
                             list_fighting_players.append(getPlayerByNum(round_number))
                             GAMESTATUS = GameState.FIGHT
-                    
-
                 else:
                     if getPlayerByNum(round_number).canMovePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos())):
                         # Move player if it's their round
@@ -375,7 +381,6 @@ while running:
                         # Disable Fight option
                         getPlayerByNum(round_number)._canFight = False
                     
-                
                 # If the end turn btn is pressed
                 if (getButtonPressed(pygame.mouse.get_pos(), (993, 630), (277,68))):
                     if round_number + 1 > 4:    
@@ -456,7 +461,7 @@ while running:
                         if p._typeofclass == "CHOOSING":
                             p.setTypeOfClass("UNDEFINED")
                     GAMESTATUS = GameState.CHOOSEMENU
-                    
+
             elif GAMESTATUS == GameState.FIGHT:
                 # Player left button
                 #TODO Check if the 2 players have been played and return to the game
@@ -480,7 +485,7 @@ while running:
             if round_number == 1: playerOne.resetMaxMovement()
             elif round_number == 2: playerTwo.resetMaxMovement()
             elif round_number == 3: playerThree.resetMaxMovement()
-            round_number += 1   
+            round_number += 1
 
     if GAMESTATUS == GameState.HOMESCREEN:
         drawMenu()
@@ -494,6 +499,7 @@ while running:
         else:                                       GAMESTATUS = GameState.CHOOSEMENU
     elif GAMESTATUS == GameState.GAMELAUNCHED:
         gameboard_window.drawGameboard(screen)
+        debug(getGameBoardPositionByMouse(pygame.mouse.get_pos()))
 
         # If a player is the winner
         if getPlayerByNum(round_number)._isWinner == True:
@@ -504,6 +510,40 @@ while running:
             for p in list_players:
                 if p._number == round_number:
                     drawUI(p)
+            # TODO Insert code to implement IA here
+            if getPlayerByNum(round_number)._typeofclass.startswith("IA"):
+                # If inventory is full
+                if (len(getPlayerByNum(round_number)._inventory) >= 4):
+                        # TODO Get close to the center of the map
+                        pass
+                # Inventory is not full
+                else:
+                    player_to_fight : Player = None
+                    
+                    max_inventory_len : int = 0
+
+                    for p in list_players:
+                        if (len(p._inventory) > max_inventory_len):
+                            max_inventory_len = len(p._inventory)
+                            player_to_fight = p
+
+                    # If inventory of other player is full
+                    if max_inventory_len >= 4:
+                        # If the player is a fighter
+                        if getPlayerByNum(round_number)._typeofclass == "IA_FIGHTER":
+                            # If they can fight
+                            if getPlayerByNum(round_number)._canFight == True:
+                                list_fighting_players.append(player_to_fight)
+                                list_fighting_players.append(getPlayerByNum(round_number))
+                                GAMESTATUS = GameState.FIGHT
+                
+                    # TODO Go to the closest res
+                    for i in range(len(gameboard_window._gameboard)):
+                        for j in range(len(gameboard_window._gameboard)):
+                            if (gameboard_window._gameboard[i][j] == "res"):
+                                pass
+                    if getPlayerByNum(round_number).canMovePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos())):
+                        pass
     elif GAMESTATUS == GameState.FIGHT:
         drawFight()
         drawDice((350,325), random_dice_value_one)
@@ -511,7 +551,7 @@ while running:
         GAMESTATUS, playerLeftWinned, playerRightWinned, list_fighting_players, random_dice_value_one, random_dice_value_two = drawWinnerFight(playerLeftWinned, playerRightWinned)
 
     # RENDER YOUR GAME HERE
-
+    
     # flip() the display to put your work on screen
     pygame.display.flip()
 

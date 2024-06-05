@@ -112,14 +112,6 @@ class Player():
                     
                     nb_movement = abs(self._pos[0] - newPos[0]) + abs(self._pos[1] - newPos[1])
                     if nb_movement <= 3:
-
-                        # Remove typeingameboard of gameboard
-                        self._gameboard_window._gameboard[self._pos[0]][self._pos[1]] = self._gameboard_window._gameboard[self._pos[0]][self._pos[1]].replace(self._typeingameboard, "")
-                        # Add typeingameboard for the new pos
-                        self._gameboard_window._gameboard[newPos[0]][newPos[1]] += self._typeingameboard
-                        
-                        self._pos = newPos
-                        self._maxrange -= nb_movement
                         return True
             return False
 
@@ -146,7 +138,6 @@ class Player():
                             self._gameboard_window._gameboard[newPos[0]][newPos[1]] = "g"
 
                         elif self._gameboard_window._gameboard[newPos[0]][newPos[1]].startswith("m"):
-                            #TODO Win
                             if len(self._inventory) >= 4:
                                 self._isWinner = True
                             return 0
