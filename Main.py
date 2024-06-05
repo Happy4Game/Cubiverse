@@ -5,6 +5,7 @@ from random import randint
 from GameState import GameState
 from GameBoardWindows import GameBoardWindows
 from Player import Player
+from math import sqrt
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
@@ -538,10 +539,19 @@ while running:
                                 GAMESTATUS = GameState.FIGHT
                 
                     # TODO Go to the closest res
+                    closest_res_distance : float = 99999999999
+                    closest_res_x = None
+                    closest_res_y = None
                     for i in range(len(gameboard_window._gameboard)):
                         for j in range(len(gameboard_window._gameboard)):
                             if (gameboard_window._gameboard[i][j] == "res"):
-                                pass
+                                # If the calculated distance is closed than before
+                                if sqrt(abs(i - getPlayerByNum(round_number)._pos[0]) + abs(j - getPlayerByNum(round_number)._pos[1])) < closest_res_distance:
+                                    closest_res_distance = sqrt(abs(i - getPlayerByNum(round_number)._pos[0]) + abs(j - getPlayerByNum(round_number)._pos[1]))
+                                    closest_res_x = i
+                                    closest_res_y = j
+
+                                print(closest_res_x, closest_res_y)
                     if getPlayerByNum(round_number).canMovePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos())):
                         pass
     elif GAMESTATUS == GameState.FIGHT:
