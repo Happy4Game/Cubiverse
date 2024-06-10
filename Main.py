@@ -343,6 +343,22 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
     
     return (GameState.FIGHT, playerLeftWinned, playerRightWinned, list_fighting_players, random_dice_value_one, random_dice_value_two)
 
+def getPlayerWithMaxedInventory() -> Player:
+    """A function that return the Player who have the most res
+
+    Returns:
+        Player: The richest player
+    """
+    richest_player : Player = None
+                    
+    max_inventory_len : int = 0
+
+    for p in list_players:
+        if (len(p._inventory) > max_inventory_len):
+            max_inventory_len = len(p._inventory)
+            richest_player = p
+    
+    return richest_player
 
 # pygame setup
 pygame.init()
@@ -561,22 +577,13 @@ while running:
                         
                 # Inventory is not full
                 else:
-                    player_to_fight : Player = None
-                    
-                    max_inventory_len : int = 0
-
-                    for p in list_players:
-                        if (len(p._inventory) > max_inventory_len):
-                            max_inventory_len = len(p._inventory)
-                            player_to_fight = p
-
                     # If inventory of other player is full
-                    if max_inventory_len >= 4:
+                    if len(getPlayerWithMaxedInventory()._inventory) >= 4:
                         # If the player is a fighter
                         if getPlayerByNum(round_number)._typeofclass == "IA_FIGHTER":
                             # If they can fight
                             if getPlayerByNum(round_number)._canFight == True:
-                                list_fighting_players.append(player_to_fight)
+                                list_fighting_players.append(getPlayerWithMaxedInventory())
                                 list_fighting_players.append(getPlayerByNum(round_number))
                                 GAMESTATUS = GameState.FIGHT
                 
@@ -632,8 +639,11 @@ while running:
                                     getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] + 1)))
                     # If there isn't res on the map, fight system
                     else:
-                        # TODO Fight system
-                        pass
+                        # If player can fight
+                        if getPlayerByNum(round_number)._canFight == True:
+                            list_fighting_players.append(getPlayerWithMaxedInventory())
+                            list_fighting_players.append(getPlayerByNum(round_number))
+                            GAMESTATUS = GameState.FIGHT
 
 
     elif GAMESTATUS == GameState.FIGHT:
