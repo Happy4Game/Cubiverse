@@ -105,7 +105,7 @@ class Player():
         Returns:
             bool: True if the player can, False if not
         """
-        if newPos != None:
+        if newPos != None and newPos != (None, None):
             
             if self._pos[0] - self._maxrange <= newPos[0] <= self._pos[0] + self._maxrange:
                 if self._pos[1] - self._maxrange <= newPos[1] <= self._pos[1] + self._maxrange:

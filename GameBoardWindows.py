@@ -9,7 +9,7 @@ class GameBoardWindows():
         self.putRandomRes()
 
     def putRandomRes(self):
-        numberOfRes : int = 12
+        numberOfRes : int = 6
         r_one : int
         r_two : int
         while numberOfRes > 0:
