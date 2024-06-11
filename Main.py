@@ -577,8 +577,8 @@ while running:
                         
                 # Inventory is not full
                 else:
-                    # If inventory of other player is full
-                    if len(getPlayerWithMaxedInventory()._inventory) >= 4:
+                    # If inventory of other player is full (and different from the current player)
+                    if len(getPlayerWithMaxedInventory()._inventory) >= 4 and getPlayerWithMaxedInventory().__eq__(getPlayerByNum(round_number)):
                         # If the player is a fighter
                         if getPlayerByNum(round_number)._typeofclass == "IA_FIGHTER":
                             # If they can fight
@@ -639,8 +639,8 @@ while running:
                                     getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] + 1)))
                     # If there isn't res on the map, fight system
                     else:
-                        # If player can fight
-                        if getPlayerByNum(round_number)._canFight == True:
+                        # If player can fight (not with himself)
+                        if getPlayerByNum(round_number)._canFight == True and getPlayerWithMaxedInventory().__eq__(getPlayerByNum(round_number)):
                             list_fighting_players.append(getPlayerWithMaxedInventory())
                             list_fighting_players.append(getPlayerByNum(round_number))
                             GAMESTATUS = GameState.FIGHT

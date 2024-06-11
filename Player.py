@@ -88,7 +88,7 @@ class Player():
         p._health = p._health - self._attack
         if p._health <= 0:
             p.die()
-        self._canFight = True
+        self._canFight = False
         p._canFight = True
 
     def resetMaxMovement(self) -> None:
@@ -111,7 +111,7 @@ class Player():
                 if self._pos[1] - self._maxrange <= newPos[1] <= self._pos[1] + self._maxrange:
                     
                     nb_movement = abs(self._pos[0] - newPos[0]) + abs(self._pos[1] - newPos[1])
-                    if nb_movement <= 3:
+                    if nb_movement <= 3 and  (self._gameboard_window._gameboard[newPos[0]][newPos[1]] == "g" or self._gameboard_window._gameboard[newPos[0]][newPos[1]] == "res"):
                         return True
             return False
 
