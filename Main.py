@@ -645,13 +645,6 @@ while running:
                             # TODO Diskjtra or go through the obstacles
                             if not is_it_left and not is_it_right and not is_it_up and not is_it_bot:
                                 pass
-                    # If there isn't res on the map, fight system
-                    else:
-                        # If player can fight (not with himself)
-                        if getPlayerByNum(round_number)._canFight == True:
-                            list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
-                            list_fighting_players.append(getPlayerByNum(round_number))
-                            GAMESTATUS = GameState.FIGHT
 
 
     elif GAMESTATUS == GameState.FIGHT:
