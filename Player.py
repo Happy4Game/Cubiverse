@@ -78,6 +78,7 @@ class Player():
             self.movePlayer((1,6))
         elif self._number == 4:
             self.movePlayer((12,6))
+        self._canFight = False
 
     def attack(self, p : Player) -> None:
         """Self attack the p Player
@@ -88,7 +89,7 @@ class Player():
         p._health = p._health - self._attack
         if p._health <= 0:
             p.die()
-        self._canFight = False
+        self._canFight = True
 
     def resetMaxMovement(self) -> None:
         """Reset the max_range of the player

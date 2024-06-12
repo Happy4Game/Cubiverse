@@ -466,7 +466,6 @@ while running:
                         if p._typeofclass == "CHOOSING":
                             p.setTypeOfClass("FIGHTER")
                 elif getButtonPressed(pygame.mouse.get_pos(), (700, 225), (48*2,48*2)):
-                    print("ia minor")
                     # The Choosing player is ia_minor
                     for p in list_players:
                         if p._typeofclass == "CHOOSING":
@@ -654,6 +653,14 @@ while running:
                                     pass
                                 if is_it_bot:
                                     pass
+                    # If res not founded
+                    else:
+                        if len(getPlayerWithMaxedInventory(getPlayerByNum(round_number))._inventory) >= 4:
+                            # If they can fight
+                            if getPlayerByNum(round_number)._canFight == True:
+                                list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
+                                list_fighting_players.append(getPlayerByNum(round_number))
+                                GAMESTATUS = GameState.FIGHT
 
     elif GAMESTATUS == GameState.FIGHT:
         drawFight()
