@@ -481,7 +481,7 @@ while running:
 
             elif GAMESTATUS == GameState.FIGHT:
                 # Player left button
-                #TODO Check if the 2 players have been played and return to the game
+                #TODO Check if the 2 players have played and return to the game
                 if getButtonPressed(pygame.mouse.get_pos(), (30,470), (200,30)):
                     random_dice_value_one = randint(1,6)
                 elif getButtonPressed(pygame.mouse.get_pos(), (1060,470), (200,30)):
@@ -637,8 +637,8 @@ while running:
                                 # If can move right
                                 if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] + 1))):
                                     getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] + 1)))
-                            # If the IA can't move, find another better way
-                            # TODO Diskjtra ou go through the obstacles
+                            # If the IA can't move, find another  way
+                            # TODO Diskjtra or go through the obstacles
                             if not is_it_left and not is_it_right and not is_it_up and not is_it_bot:
                                 pass
                     # If there isn't res on the map, fight system
