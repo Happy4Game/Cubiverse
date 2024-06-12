@@ -645,7 +645,15 @@ while running:
                             # TODO Diskjtra or go through the obstacles
                             if not is_it_left and not is_it_right and not is_it_up and not is_it_bot:
                                 pass
-
+                            else:
+                                if is_it_left:
+                                    pass
+                                if is_it_right:
+                                    pass
+                                if is_it_up:
+                                    pass
+                                if is_it_bot:
+                                    pass
 
     elif GAMESTATUS == GameState.FIGHT:
         drawFight()
