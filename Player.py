@@ -155,19 +155,7 @@ class Player():
         return "Player : [number : " + str(self._number) + ", inventory : " + str(self._inventory) + ", type : " + self._typeofclass + ", health : " + str(self._health) + ", attack : " + str(self._attack) + ", pos : " + str(self._pos) + ", maxrange : " + str(self._maxrange) + "]"
 
     def __eq__(self, otherPlayer : Player) -> bool:
-        if (
-        len(self._inventory) == len(otherPlayer._inventory) and
-        self._typeofclass == otherPlayer._typeofclass and
-        self._typeingameboard == otherPlayer._typeingameboard and
-        self._health == otherPlayer._health and
-        self._attack == otherPlayer._attack and
-        self._maxrange == otherPlayer._maxrange and
-        self._isWinner == otherPlayer._isWinner and
-        self._canFight == otherPlayer._canFight and
-        self._number == otherPlayer._number and
-        self._gameboard_window == otherPlayer._gameboard_window and
-        self._pos[0] == otherPlayer._pos[0] and
-        self._pos[1] == otherPlayer._pos[1]):
+        if self._number == otherPlayer._number:
             return True
         else:
             return False
