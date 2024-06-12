@@ -333,6 +333,7 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
             if len(list_fighting_players[1]._inventory) >= 1:
                 # faire en sorte que le joueur perdant perde toutes ses gemmmes et qu'elles soient de nouveau redistribuée sur le plateau.
                 list_fighting_players[1]._inventory.clear()
+                # rajouter les 4 gemmes sur le plateau
             list_fighting_players[0]._maxrange = 0
             pygame.display.flip()
             pygame.time.delay(4000)
