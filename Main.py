@@ -331,6 +331,7 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
             screen.blit(myfont_big.render("Le joueur " + str(list_fighting_players[0]._number) + " a gagné !", 1, (100,100,100)), (400, 125))
             list_fighting_players[0].attack(list_fighting_players[1])
             if len(list_fighting_players[1]._inventory) >= 1:
+                # faire en sorte que le joueur perdant perde toutes ses gemmmes et qu'elles soient de nouveau redistribuée sur le plateau.
                 list_fighting_players[1]._inventory.pop()
                 list_fighting_players[0]._inventory.append("res")
             list_fighting_players[0]._maxrange = 0
@@ -344,6 +345,7 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
             screen.blit(myfont_big.render("Le joueur " + str(list_fighting_players[1]._number) + " a gagné !", 1, (100,100,100)), (400, 125))
             list_fighting_players[1].attack(list_fighting_players[0])
             if len(list_fighting_players[0]._inventory) >= 1:
+                # faire en sorte que le joueur perdant perde toutes ses gemmmes et qu'elles soient de nouveau redistribuée sur le plateau.
                 list_fighting_players[0]._inventory.pop()
                 list_fighting_players[1]._inventory.append("res")
             list_fighting_players[1]._maxrange = 0
