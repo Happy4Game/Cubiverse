@@ -220,6 +220,18 @@ def drawUI(player : Player) -> None:
     label = myfont_little.render("Nombre d'items : " + str(len(player._inventory)), 1, (0,0,0))
     screen.blit(label, (10, 205))
 
+    label = myfont_little.render("Items joueur 1 : " + str(len(list_players[0]._inventory)), 1, (0,0,0))
+    screen.blit(label, (1000, 100))
+
+    label = myfont_little.render("Items joueur 2 : " + str(len(list_players[1]._inventory)), 1, (0,0,0))
+    screen.blit(label, (1000, 125))
+
+    label = myfont_little.render("Items joueur 3 : " + str(len(list_players[2]._inventory)), 1, (0,0,0))
+    screen.blit(label, (1000, 150))
+
+    label = myfont_little.render("Items joueur 4 : " + str(len(list_players[3]._inventory)), 1, (0,0,0))
+    screen.blit(label, (1000, 175))
+
     # Draw red box
     screen.blit(pygame.image.load("./assets/png/select.png").convert_alpha(), getGameBoardPositionByCase(player._pos))
 
