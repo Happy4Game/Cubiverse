@@ -88,7 +88,7 @@ class Player():
         p._health = p._health - self._attack
         if p._health <= 0:
             p.die()
-        self._canFight = False
+        self._canFight = True
         p._canFight = True
 
     def resetMaxMovement(self) -> None:

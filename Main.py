@@ -637,6 +637,10 @@ while running:
                                 # If can move right
                                 if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] + 1))):
                                     getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] + 1)))
+                            # If the IA can't move, find another better way
+                            # TODO Diskjtra ou go through the obstacles
+                            if not is_it_left and not is_it_right and not is_it_up and not is_it_bot:
+                                pass
                     # If there isn't res on the map, fight system
                     else:
                         # If player can fight (not with himself)
