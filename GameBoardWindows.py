@@ -6,10 +6,10 @@ class GameBoardWindows():
     def __init__(self, gameboard : list) -> None:
         
         self._gameboard = gameboard
-        self.putRandomRes()
+        self.putRandomRes(6)
 
-    def putRandomRes(self):
-        numberOfRes : int = 6
+    def putRandomRes(self, n):
+        numberOfRes : int = n
         r_one : int
         r_two : int
         while numberOfRes > 0:
