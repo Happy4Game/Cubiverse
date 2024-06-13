@@ -340,13 +340,11 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
             screen.blit(myfont_big.render("Le joueur " + str(list_fighting_players[0]._number) + " a gagné !", 1, (100,100,100)), (400, 125))
             list_fighting_players[0].attack(list_fighting_players[1])
             if len(list_fighting_players[1]._inventory) >= 1:
-                last_pos = list_fighting_players[1]._pos
+                numberOfResLoosePlayer = len(list_fighting_players[1]._inventory)
                 # Si le personnage est mort
                 if list_fighting_players[0].attack(list_fighting_players[1]) == True:
-                    gameboard_window._gameboard[list_fighting_players[1]._pos[0]][list_fighting_players[1]._pos[1]] = list_fighting_players[1]._typeingameboard
-                    gameboard_window._gameboard[last_pos[0]][last_pos[1]] = "g"
                     list_fighting_players[1]._inventory.clear()
-                    gameboard_window.putRandomRes(4)
+                    gameboard_window.putRandomRes(numberOfResLoosePlayer)
                 else:    
                     list_fighting_players[1]._inventory.pop()
                     gameboard_window.putRandomRes(1)
@@ -361,13 +359,11 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
             screen.blit(myfont_big.render("Le joueur " + str(list_fighting_players[1]._number) + " a gagné !", 1, (100,100,100)), (400, 125))
             list_fighting_players[1].attack(list_fighting_players[0])
             if len(list_fighting_players[0]._inventory) >= 1:
-                last_pos = list_fighting_players[0]._pos
+                numberOfResLoosePlayer = len(list_fighting_players[0]._inventory)
                 # Si le personnage est mort
                 if list_fighting_players[1].attack(list_fighting_players[0]) == True:
-                    gameboard_window._gameboard[list_fighting_players[0]._pos[0]][list_fighting_players[0]._pos[1]] = list_fighting_players[0]._typeingameboard
-                    gameboard_window._gameboard[last_pos[0]][last_pos[1]] = "g"
                     list_fighting_players[0]._inventory.clear()
-                    gameboard_window.putRandomRes(4)
+                    gameboard_window.putRandomRes(numberOfResLoosePlayer)
                 else:    
                     list_fighting_players[0]._inventory.pop()
                     gameboard_window.putRandomRes(1)

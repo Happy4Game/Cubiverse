@@ -48,11 +48,11 @@ class Player():
             self._inventory.append("res")
             self._typeingameboard   = "_p_minor"
         elif type == "FIGHTER":
-            self._attack            = self._attack * 1.5
+            self._attack            = 15
             self._typeofclass       = type
             self._typeingameboard   = "_p_fighter"
         elif type == "IA_FIGHTER":
-            self._attack            = self._attack * 1.5
+            self._attack            = 15
             self._typeofclass       = type
             self._typeingameboard   = "_p_ia_fighter"
         elif type == "IA_MINOR":
@@ -68,6 +68,7 @@ class Player():
         """Reset life and pos of the player
         """
         self._health : int = 30
+        self._gameboard_window._gameboard[self._pos[0]][self._pos[1]] = "g"
         if len(self._inventory) > 0:
             self._inventory.clear()
         if self._number == 1:
@@ -78,6 +79,7 @@ class Player():
             self._pos = (1,6)
         elif self._number == 4:
             self._pos = (12,6)
+        self._gameboard_window._gameboard[self._pos[0]][self._pos[1]] = "g_" + self._typeingameboard
         self._canFight = False
 
     def attack(self, p : Player) -> None:
