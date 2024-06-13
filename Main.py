@@ -513,6 +513,32 @@ def movePlayerToClosestType(player : Player, type_of_get_close : str):
                     if player.canMovePlayer(step):
                         break
 
+def endRound(round_number) -> int:
+    """End a round, must reassign the real round_number
+
+    Args:
+        round_number (int): actual round
+
+    Returns:
+        int: new round_number
+    """
+    if round_number + 1 > 4:    
+        playerFour.resetMaxMovement()
+        playerFour._canFight = True
+        round_number = 1
+    else:
+        if round_number == 1: 
+            playerOne.resetMaxMovement()
+            playerOne._canFight = True
+        elif round_number == 2:
+            playerTwo.resetMaxMovement()
+            playerTwo._canFight = True
+        elif round_number == 3:
+            playerThree.resetMaxMovement()
+            playerThree._canFight = True
+        round_number += 1      
+    return round_number
+    
 
 # pygame setup
 pygame.init()
@@ -559,21 +585,8 @@ while running:
                     
                 # If the end turn btn is pressed
                 if (getButtonPressed(pygame.mouse.get_pos(), (993, 630), (277,68))):
-                    if round_number + 1 > 4:    
-                        playerFour.resetMaxMovement()
-                        playerFour._canFight = True
-                        round_number = 1
-                    else:
-                        if round_number == 1: 
-                            playerOne.resetMaxMovement()
-                            playerOne._canFight = True
-                        elif round_number == 2:
-                            playerTwo.resetMaxMovement()
-                            playerTwo._canFight = True
-                        elif round_number == 3:
-                            playerThree.resetMaxMovement()
-                            playerThree._canFight = True
-                        round_number += 1      
+                    round_number = endRound(round_number)
+
             elif GAMESTATUS == GameState.CHOOSEMENU:
                 # Player 1 button
                 if getButtonPressed(pygame.mouse.get_pos(), (400,250), (100,100)):
@@ -706,7 +719,7 @@ while running:
                     # If inventory of other players are not full
                     else:
                         movePlayerToClosestType(getPlayerByNum(round_number), "res")
-
+                round_number = endRound(round_number)
     elif GAMESTATUS == GameState.FIGHT:
         drawFight()
         drawDice((350,325), random_dice_value_one)
