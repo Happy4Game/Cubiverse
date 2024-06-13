@@ -155,7 +155,7 @@ class Player():
         return "Player : [number : " + str(self._number) + ", inventory : " + str(self._inventory) + ", type : " + self._typeofclass + ", health : " + str(self._health) + ", attack : " + str(self._attack) + ", pos : " + str(self._pos) + ", maxrange : " + str(self._maxrange) + "]"
 
     def __eq__(self, otherPlayer : Player) -> bool:
-        if self._number == otherPlayer._number:
-            return True
-        else:
-            return False
+        if isinstance(otherPlayer, Player):
+            if self._number == otherPlayer._number:
+                return True
+        return False
