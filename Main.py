@@ -720,6 +720,7 @@ while running:
                     else:
                         movePlayerToClosestType(getPlayerByNum(round_number), "res")
                 round_number = endRound(round_number)
+                pygame.time.delay(100)
     elif GAMESTATUS == GameState.FIGHT:
         drawFight()
         drawDice((350,325), random_dice_value_one)
