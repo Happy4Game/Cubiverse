@@ -544,6 +544,8 @@ myfont : pygame.font        = pygame.font.SysFont("monospace", 20)
 myfont_little : pygame.font = pygame.font.SysFont("monospace", 16)
 myfont_big : pygame.font    = pygame.font.SysFont("monospace", 40)
 
+pygame.display.set_icon(pygame.image.load("./assets/png/cubiverse_32x32.png"))
+pygame.display.set_caption('Cubiverse')
 screen  = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock   = pygame.time.Clock()
 running = True
