@@ -577,8 +577,6 @@ while running:
                     if getPlayerByNum(round_number).canMovePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos())):
                         # Move player if it's their round
                         getPlayerByNum(round_number).movePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos()))
-                        # Disable Fight option
-                        getPlayerByNum(round_number)._canFight = False
                     
                 # If the end turn btn is pressed
                 if (getButtonPressed(pygame.mouse.get_pos(), (993, 630), (277,68))):
@@ -711,6 +709,10 @@ while running:
                     # If inventory of other players are not full
                     else:
                         movePlayerToClosestType(getPlayerByNum(round_number), "res")
+                        if getPlayerByNum(round_number)._canFight == True:
+                                list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
+                                list_fighting_players.append(getPlayerByNum(round_number))
+                                GAMESTATUS = GameState.FIGHT
                 round_number = endRound(round_number)
                 pygame.time.delay(100)
     elif GAMESTATUS == GameState.FIGHT:

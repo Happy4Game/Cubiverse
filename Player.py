@@ -152,6 +152,8 @@ class Player():
                         self._gameboard_window._gameboard[newPos[0]][newPos[1]] += self._typeingameboard
                         
                         self._pos = newPos
+                        # Disable Fight option
+                        self._canFight = False
                         self._maxrange -= nb_movement
                         return nb_movement
             return 0
