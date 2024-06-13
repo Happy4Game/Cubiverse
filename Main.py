@@ -707,6 +707,14 @@ while running:
                                 list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
                                 list_fighting_players.append(getPlayerByNum(round_number))
                                 GAMESTATUS = GameState.FIGHT
+                        # If the player is minor
+                        else:
+                            movePlayerToClosestType(getPlayerByNum(round_number), "res")
+                            # If no resource on the map
+                            if getPlayerByNum(round_number)._canFight == True:
+                                list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
+                                list_fighting_players.append(getPlayerByNum(round_number))
+                                GAMESTATUS = GameState.FIGHT
 
                     # If inventory of other players are not full
                     else:
