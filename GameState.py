@@ -6,3 +6,4 @@ class GameState(Enum):
     CHOOSEMENU_TYPE = 2
     GAMELAUNCHED    = 3
     FIGHT           = 4
+    WINNED          = 5
