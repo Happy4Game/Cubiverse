@@ -546,7 +546,7 @@ while running:
         # If a player is the winner
         if getPlayerByNum(round_number)._isWinner == True:
             # Winned !
-            screen.blit(myfont_big.render("Le joueur " + str(round_number) + " a gagné !", 1, (255,100,100)), (400, 125))
+            GAMESTATUS = GameState.WINNED
         else:
             # Draw UI for good player
             for p in list_players:
@@ -692,6 +692,8 @@ while running:
         drawDice((875,325), random_dice_value_two)
         GAMESTATUS, playerLeftWinned, playerRightWinned, list_fighting_players, random_dice_value_one, random_dice_value_two = drawWinnerFight(playerLeftWinned, playerRightWinned)
 
+    elif GAMESTATUS == GameState.WINNED:
+        screen.blit(myfont_big.render("Le joueur " + str(round_number) + " a gagné !", 1, (255,100,100)), (400, 325))
     # RENDER YOUR GAME HERE
     
     # flip() the display to put your work on screen
