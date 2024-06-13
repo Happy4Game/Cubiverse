@@ -71,13 +71,13 @@ class Player():
         if len(self._inventory) > 0:
             self._inventory.clear()
         if self._number == 1:
-            self.movePlayer((6,1))
+            self._pos = (6,1)
         elif self._number == 2:
-            self.movePlayer((6,12))
+            self._pos = (6,12)
         elif self._number == 3:
-            self.movePlayer((1,6))
+            self._pos = (1,6)
         elif self._number == 4:
-            self.movePlayer((12,6))
+            self._pos = (12,6)
         self._canFight = False
 
     def attack(self, p : Player) -> None:
