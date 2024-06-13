@@ -377,13 +377,117 @@ def getPlayerWithMaxedInventory(fromPlayer : Player) -> Player:
     
     return richest_player
 
-def getPathToSpecificPos(from_pos : tuple, to_pos : tuple):
-    """Get the path to from_pos until to_pos
+def createGraphFromGameboard(accept_m : bool = False):
+    """Create graph to be used in Dijkstra
+    
+    Args:
+        accept_m (bool): Do you need to go to "m"
+
+    Returns:
+        graph: Graph to be used in Dijkstra
+    """
+    rows, cols = len(gameboard_window._gameboard), len(gameboard_window._gameboard[0])
+    graph = {}
+
+    obstacles = {"b_one", "b_two", "b_one_r", "b_two_r", "_p_minor", "_p_fighter", "_p_ia_fighter", "_p_ia_minor"}
+
+    if not accept_m:
+        obstacles.add("m")        
+
+    for row in range(rows):
+        for col in range(cols):
+            if gameboard_window._gameboard[row][col] in obstacles:
+                # Pass obstacles
+                continue 
+            node = (row, col)
+            graph[node] = []
+            # Check case up, down, left, right
+            for d_row, d_col in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+                neighbor_row, neighbor_col = row + d_row, col + d_col
+                if 0 <= neighbor_row < rows and 0 <= neighbor_col < cols and gameboard_window._gameboard[neighbor_row][neighbor_col] not in obstacles:
+                    neighbor_node = (neighbor_row, neighbor_col)
+                    # 1 Height for moving
+                    graph[node].append((1, neighbor_node))
+    return graph
+
+def dijkstraShortestPath(player_position : tuple, accept_m : bool = False):
+    """Use Dijkstra algorithm to find the 
 
     Args:
-        from_pos (tuple): Pos to start
-        to_pos (tuple): Pos to end
+        player_position (tuple): Pos of the player
+        accept_m (bool): Do you need to go to "m"
+
+    Returns:
+        (previous, shortest_distances)
     """
+    graph = createGraphFromGameboard(accept_m)
+
+    nodes_to_visit = [(0, player_position)]
+    shortest_distances = {node: float('infinity') for node in graph}
+    shortest_distances[player_position] = 0
+    previous_nodes = {node: None for node in graph}
+
+    while nodes_to_visit:
+        current_distance, current_node = min(nodes_to_visit, key=lambda x: x[0])
+        nodes_to_visit.remove((current_distance, current_node))
+
+        for neighbor_weight, neighbor_node in graph[current_node]:
+            distance = current_distance + neighbor_weight
+
+            if distance < shortest_distances[neighbor_node]:
+                shortest_distances[neighbor_node] = distance
+                previous_nodes[neighbor_node] = current_node
+                nodes_to_visit.append((distance, neighbor_node))
+
+    return previous_nodes, shortest_distances
+
+def movePlayerToClosestType(player : Player, type_of_get_close : str):
+    """Move player using Disjktra
+
+    Args:
+        player (Player): Player who wants to move
+        type_of_get_close (str): Type of what we want to get close
+    """
+    player_position = player._pos
+    if type_of_get_close == "m":
+        previous_nodes, shortest_distances = dijkstraShortestPath(player_position, accept_m=True)
+    else:
+        previous_nodes, shortest_distances = dijkstraShortestPath(player_position)
+
+    closest_res_distance = float('inf')
+    closest_res_position = None
+
+    # Find all type_of_get_close positions
+    gameboard = gameboard_window._gameboard
+    res_positions = [(i, j) for i in range(len(gameboard)) for j in range(len(gameboard[i])) if gameboard[i][j] == type_of_get_close]
+
+    # Find the position the most close
+    for res_position in res_positions:
+        if shortest_distances[res_position] < closest_res_distance:
+            closest_res_distance = shortest_distances[res_position]
+            closest_res_position = res_position
+
+    # If case founded, move the player
+    if closest_res_position is not None:
+        path_to_closest_res = []
+        current_node = closest_res_position
+        while current_node is not None:
+            path_to_closest_res.append(current_node)
+            current_node = previous_nodes[current_node]
+        path_to_closest_res.reverse()
+
+        # Move to player using path
+        for step in path_to_closest_res:
+            if player.canMovePlayer(step):
+                player.movePlayer(step)
+            else:
+                # If the player can't move then force him to go at max range
+                max_movement = player._maxrange
+                while max_movement > 0:
+                    player.movePlayer(step)
+                    max_movement -= 1
+                    if player.canMovePlayer(step):
+                        break
 
 
 # pygame setup
@@ -556,49 +660,7 @@ while running:
             if getPlayerByNum(round_number)._typeofclass.startswith("IA"):
                 # If inventory is full
                 if (len(getPlayerByNum(round_number)._inventory) >= 4):
-                        closest_mine_distance : float = 99999999999
-                        closest_mine_x = None
-                        closest_mine_y = None
-                        for i in range(len(gameboard_window._gameboard)):
-                            for j in range(len(gameboard_window._gameboard)):
-                                if (gameboard_window._gameboard[i][j] == "m"):
-                                    # If the calculated distance is closed than before
-                                    if sqrt(abs(i - getPlayerByNum(round_number)._pos[0]) + abs(j - getPlayerByNum(round_number)._pos[1])) < closest_mine_distance:
-                                        closest_mine_distance = sqrt(abs(i - getPlayerByNum(round_number)._pos[0]) + abs(j - getPlayerByNum(round_number)._pos[1]))
-                                        closest_mine_x = i
-                                        closest_mine_y = j
-                        debug("plus proche: " + str(closest_mine_x) + ", " + str(closest_mine_y), y=300)
-                        is_it_right = closest_mine_y > getPlayerByNum(round_number)._pos[1]
-                        is_it_left = closest_mine_y < getPlayerByNum(round_number)._pos[1]
-                        is_it_up = closest_mine_x < getPlayerByNum(round_number)._pos[0]
-                        is_it_bot = closest_mine_x > getPlayerByNum(round_number)._pos[0]
-                        is_it_vertical_align = closest_mine_y == getPlayerByNum(round_number)._pos[1]
-                        is_it_horizontal_align = closest_mine_x == getPlayerByNum(round_number)._pos[0] == 0
-
-                        debug("droite : " + str(is_it_right), y=325)
-                        debug("gauche: " +  str(is_it_left), y=350)
-                        debug("haut: " + str(is_it_up), y=375)
-                        debug("bas: " + str(is_it_bot), y=400)
-
-                        debug("axe vertical similaire: " +  str(is_it_vertical_align), y=425)
-                        debug("axe horizontale similaire: " +  str(is_it_horizontal_align), y=450)
-
-                        if is_it_up:
-                            # If can move up
-                            if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0] - 1, (getPlayerByNum(round_number)._pos[1]))):
-                                getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0] - 1, (getPlayerByNum(round_number)._pos[1])))
-                        elif is_it_bot:
-                            # If can move bot
-                            if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0] + 1, (getPlayerByNum(round_number)._pos[1]))):
-                                getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0] + 1, (getPlayerByNum(round_number)._pos[1])))
-                        elif is_it_left:
-                            # If can move left
-                            if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] - 1))):
-                                getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] - 1)))
-                        elif is_it_right:
-                            # If can move right
-                            if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] + 1))):
-                                getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] + 1)))
+                        movePlayerToClosestType(getPlayerByNum(round_number), "m")
                         
                 # Inventory is not full
                 else:
@@ -614,77 +676,7 @@ while running:
 
                     # If inventory of other players are not full
                     else:
-                        closest_res_distance : float = 99999999999
-                        closest_res_x = None
-                        closest_res_y = None
-                        for i in range(len(gameboard_window._gameboard)):
-                            for j in range(len(gameboard_window._gameboard)):
-                                if (gameboard_window._gameboard[i][j] == "res"):
-                                    # If the calculated distance is closed than before
-                                    if sqrt(abs(i - getPlayerByNum(round_number)._pos[0]) + abs(j - getPlayerByNum(round_number)._pos[1])) < closest_res_distance:
-                                        closest_res_distance = sqrt(abs(i - getPlayerByNum(round_number)._pos[0]) + abs(j - getPlayerByNum(round_number)._pos[1]))
-                                        closest_res_x = i
-                                        closest_res_y = j
-                        # Closest res founded
-                        if closest_res_x != None and closest_res_y != None:
-                            # If the ia can move on res, move
-                            if getPlayerByNum(round_number).canMovePlayer((closest_res_x, closest_res_y)):
-                                getPlayerByNum(round_number).movePlayer((closest_res_x, closest_res_y))
-                            # If the ia can't move on res, try to approach
-                            else:
-                                debug("plus proche: " + str(closest_res_x) + ", " + str(closest_res_y), y=300)
-                                is_it_right = closest_res_y > getPlayerByNum(round_number)._pos[1]
-                                is_it_left = closest_res_y < getPlayerByNum(round_number)._pos[1]
-                                is_it_up = closest_res_x < getPlayerByNum(round_number)._pos[0]
-                                is_it_bot = closest_res_x > getPlayerByNum(round_number)._pos[0]
-                                is_it_vertical_align = closest_res_y == getPlayerByNum(round_number)._pos[1]
-                                is_it_horizontal_align = closest_res_x == getPlayerByNum(round_number)._pos[0] == 0
-
-                                debug("droite : " + str(is_it_right), y=325)
-                                debug("gauche: " +  str(is_it_left), y=350)
-                                debug("haut: " + str(is_it_up), y=375)
-                                debug("bas: " + str(is_it_bot), y=400)
-
-                                debug("axe vertical similaire: " +  str(is_it_vertical_align), y=425)
-                                debug("axe horizontale similaire: " +  str(is_it_horizontal_align), y=450)
-
-                                if is_it_up:
-                                    # If can move up
-                                    if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0] - 1, (getPlayerByNum(round_number)._pos[1]))):
-                                        getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0] - 1, (getPlayerByNum(round_number)._pos[1])))
-                                elif is_it_bot:
-                                    # If can move bot
-                                    if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0] + 1, (getPlayerByNum(round_number)._pos[1]))):
-                                        getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0] + 1, (getPlayerByNum(round_number)._pos[1])))
-                                elif is_it_left:
-                                    # If can move left
-                                    if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] - 1))):
-                                        getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] - 1)))
-                                elif is_it_right:
-                                    # If can move right
-                                    if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] + 1))):
-                                        getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] + 1)))
-                                # If the IA can't move, find another  way
-                                # TODO Diskjtra or go through the obstacles
-                                if not is_it_left and not is_it_right and not is_it_up and not is_it_bot:
-                                    pass
-                                else:
-                                    if is_it_left:
-                                        pass
-                                    if is_it_right:
-                                        pass
-                                    if is_it_up:
-                                        pass
-                                    if is_it_bot:
-                                        pass
-                        # If res not founded
-                        else:
-                            if getPlayerWithMaxedInventory(getPlayerByNum(round_number)) != None and len(getPlayerWithMaxedInventory(getPlayerByNum(round_number))._inventory) >= 4:
-                                # If they can fight
-                                if getPlayerByNum(round_number)._canFight == True:
-                                    list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
-                                    list_fighting_players.append(getPlayerByNum(round_number))
-                                    GAMESTATUS = GameState.FIGHT
+                        movePlayerToClosestType(getPlayerByNum(round_number), "res")
 
     elif GAMESTATUS == GameState.FIGHT:
         drawFight()
