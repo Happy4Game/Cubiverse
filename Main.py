@@ -709,10 +709,27 @@ while running:
                     # If inventory of other players are not full
                     else:
                         movePlayerToClosestType(getPlayerByNum(round_number), "res")
+                        # If no resource on the map
                         if getPlayerByNum(round_number)._canFight == True:
-                                list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
-                                list_fighting_players.append(getPlayerByNum(round_number))
-                                GAMESTATUS = GameState.FIGHT
+                                if getPlayerByNum(round_number)._typeofclass == "IA_FIGHTER":
+                                    list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
+                                    list_fighting_players.append(getPlayerByNum(round_number))
+                                    GAMESTATUS = GameState.FIGHT
+                                # If the player is Minor
+                                else:
+                                    # TODO, if there is no fighter then fight
+                                    fighter_founded : bool = False
+                                    for p in list_players:
+                                        if p._typeofclass == "IA_FIGHTER":
+                                            fighter_founded = True
+                                    # Fighter founded, just get close to the center of map
+                                    if fighter_founded:
+                                        movePlayerToClosestType(getPlayerByNum(round_number), "m")
+                                    else:
+                                        list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
+                                        list_fighting_players.append(getPlayerByNum(round_number))
+                                        GAMESTATUS = GameState.FIGHT
+
                 round_number = endRound(round_number)
                 pygame.time.delay(100)
     elif GAMESTATUS == GameState.FIGHT:
