@@ -411,7 +411,7 @@ while running:
                 # If a player is in mouse pos                
                 if isCellOccuped(getGameBoardPositionByMouse(pygame.mouse.get_pos())) and getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))._number != round_number:
                     #Fight
-                    if getCell(getGameBoardPositionByMouse(pygame.mouse.get_pos())).endswith("_p_fighter") or getCell(getGameBoardPositionByMouse(pygame.mouse.get_pos())).endswith("_p_minor"):
+                    if getCell(getGameBoardPositionByMouse(pygame.mouse.get_pos())).__contains__("_p_"):
                         # If they can fight
                         if getPlayerByNum(round_number)._canFight == True:
                             list_fighting_players.append((getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))))
@@ -640,51 +640,6 @@ while running:
                                 is_it_vertical_align = closest_res_y == getPlayerByNum(round_number)._pos[1]
                                 is_it_horizontal_align = closest_res_x == getPlayerByNum(round_number)._pos[0] == 0
 
-                                debug("droite : " + str(is_it_right), y=325)
-                                debug("gauche: " +  str(is_it_left), y=350)
-                                debug("haut: " + str(is_it_up), y=375)
-                                debug("bas: " + str(is_it_bot), y=400)
-
-                                debug("axe vertical similaire: " +  str(is_it_vertical_align), y=425)
-                                debug("axe horizontale similaire: " +  str(is_it_horizontal_align), y=450)
-
-                                if is_it_up:
-                                    # If can move up
-                                    if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0] - 1, (getPlayerByNum(round_number)._pos[1]))):
-                                        getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0] - 1, (getPlayerByNum(round_number)._pos[1])))
-                                elif is_it_bot:
-                                    # If can move bot
-                                    if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0] + 1, (getPlayerByNum(round_number)._pos[1]))):
-                                        getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0] + 1, (getPlayerByNum(round_number)._pos[1])))
-                                elif is_it_left:
-                                    # If can move left
-                                    if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] - 1))):
-                                        getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] - 1)))
-                                elif is_it_right:
-                                    # If can move right
-                                    if getPlayerByNum(round_number).canMovePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] + 1))):
-                                        getPlayerByNum(round_number).movePlayer((getPlayerByNum(round_number)._pos[0], (getPlayerByNum(round_number)._pos[1] + 1)))
-                                # If the IA can't move, find another  way
-                                # TODO Diskjtra or go through the obstacles
-                                if not is_it_left and not is_it_right and not is_it_up and not is_it_bot:
-                                    pass
-                                else:
-                                    if is_it_left:
-                                        pass
-                                    if is_it_right:
-                                        pass
-                                    if is_it_up:
-                                        pass
-                                    if is_it_bot:
-                                        pass
-                        # If res not founded
-                        else:
-                            if getPlayerWithMaxedInventory(getPlayerByNum(round_number)) != None and len(getPlayerWithMaxedInventory(getPlayerByNum(round_number))._inventory) >= 4:
-                                # If they can fight
-                                if getPlayerByNum(round_number)._canFight == True:
-                                    list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
-                                    list_fighting_players.append(getPlayerByNum(round_number))
-                                    GAMESTATUS = GameState.FIGHT
 
     elif GAMESTATUS == GameState.FIGHT:
         drawFight()
