@@ -238,6 +238,15 @@ def drawUI(player : Player) -> None:
     # Draw end of the round btn
     screen.blit(pygame.image.load("./assets/png/end_round.png").convert_alpha(), (993, 630))
 
+    # Draw show number of players
+    screen.blit(pygame.image.load("./assets/png/show_infos.png").convert_alpha(), (993, 550))
+
+    if show_infos:
+        for p in list_players:
+            if p._typeofclass != "UNDEFINED":
+                coordinate : tuple = (1280 / 4.5 + p._pos[1]*50,p._pos[0]*50)
+                screen.blit(pygame.image.load("./assets/png/number_" + str(p._number) + ".png").convert_alpha(), coordinate)
+
 def drawFight() -> None:
     """Draw fight
     """
@@ -501,6 +510,7 @@ myfont_big : pygame.font    = pygame.font.SysFont("monospace", 40)
 screen  = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock   = pygame.time.Clock()
 running = True
+show_infos : bool = False
 
 
 while running:
@@ -512,6 +522,10 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             if GAMESTATUS == GameState.GAMELAUNCHED:
+
+                # If a player want to show number of each player
+                if getButtonPressed(pygame.mouse.get_pos(), (993, 550), (277,68)):
+                    show_infos = not show_infos
 
                 # If a player is in mouse pos                
                 if isCellOccuped(getGameBoardPositionByMouse(pygame.mouse.get_pos())) and getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))._number != round_number:
