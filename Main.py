@@ -345,9 +345,10 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
                 if list_fighting_players[0].attack(list_fighting_players[1]) == True:
                     list_fighting_players[1]._inventory.clear()
                     gameboard_window.putRandomRes(numberOfResLoosePlayer)
-                else:    
-                    list_fighting_players[1]._inventory.pop()
-                    gameboard_window.putRandomRes(1)
+                else:
+                    if len(list_fighting_players[1]._inventory) >= 1:
+                        list_fighting_players[1]._inventory.pop()
+                        gameboard_window.putRandomRes(1)
             list_fighting_players[0]._maxrange = 0
             pygame.display.flip()
             pygame.time.delay(4000)
@@ -653,12 +654,7 @@ while running:
                     random_dice_value_one = randint(1,6)
                 elif getButtonPressed(pygame.mouse.get_pos(), (1060,470), (200,30)):
                     random_dice_value_two = randint(1,6)
-                # If the 2 dices have been rolled
-                if random_dice_value_one != 0 and random_dice_value_two != 0:
-                    if random_dice_value_two < random_dice_value_one:
-                        playerLeftWinned = True
-                    else:
-                        playerRightWinned = True
+                
 
     # If player is not defined, pass round automaticaly
     if getPlayerByNum(round_number)._typeofclass == "UNDEFINED":
@@ -719,6 +715,16 @@ while running:
                 pygame.time.delay(100)
     elif GAMESTATUS == GameState.FIGHT:
         drawFight()
+        if list_fighting_players[0]._typeofclass.startswith("IA") and random_dice_value_one == 0:
+            random_dice_value_one = randint(1,6)
+        if list_fighting_players[1]._typeofclass.startswith("IA") and random_dice_value_two == 0:
+            random_dice_value_two = randint(1,6)
+        # If the 2 dices have been rolled
+        if random_dice_value_one != 0 and random_dice_value_two != 0:
+            if random_dice_value_two < random_dice_value_one:
+                playerLeftWinned = True
+            else:
+                playerRightWinned = True
         drawDice((350,325), random_dice_value_one)
         drawDice((875,325), random_dice_value_two)
         GAMESTATUS, playerLeftWinned, playerRightWinned, list_fighting_players, random_dice_value_one, random_dice_value_two = drawWinnerFight(playerLeftWinned, playerRightWinned)
