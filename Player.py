@@ -69,7 +69,7 @@ class Player():
         """
         self._health : int = 30
         if len(self._inventory) > 0:
-            self._inventory.pop()
+            self._inventory.clear()
         if self._number == 1:
             self.movePlayer((6,1))
         elif self._number == 2:
@@ -86,10 +86,13 @@ class Player():
         Args:
             p (Player): Player attacked
         """
+        mort = False
         p._health = p._health - self._attack
         if p._health <= 0:
             p.die()
+            mort = True
         self._canFight = True
+        return mort
 
     def resetMaxMovement(self) -> None:
         """Reset the max_range of the player
