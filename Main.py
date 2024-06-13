@@ -411,7 +411,7 @@ while running:
                 # If a player is in mouse pos                
                 if isCellOccuped(getGameBoardPositionByMouse(pygame.mouse.get_pos())) and getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))._number != round_number:
                     #Fight
-                    if getCell(getGameBoardPositionByMouse(pygame.mouse.get_pos())).endswith("_p_fighter") or getCell(getGameBoardPositionByMouse(pygame.mouse.get_pos())).endswith("_p_minor"):
+                    if getCell(getGameBoardPositionByMouse(pygame.mouse.get_pos())).__contains__("_p_"):
                         # If they can fight
                         if getPlayerByNum(round_number)._canFight == True:
                             list_fighting_players.append((getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))))
