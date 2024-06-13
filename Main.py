@@ -603,7 +603,7 @@ while running:
                 # Inventory is not full
                 else:
                     # If inventory of other player is full (and different from the current player)
-                    if len(getPlayerWithMaxedInventory(getPlayerByNum(round_number))._inventory) >= 4:
+                    if getPlayerWithMaxedInventory(getPlayerByNum(round_number)) != None and len(getPlayerWithMaxedInventory(getPlayerByNum(round_number))._inventory) >= 4:
                         # If the player is a fighter
                         if getPlayerByNum(round_number)._typeofclass == "IA_FIGHTER":
                             # If they can fight
@@ -679,7 +679,7 @@ while running:
                                         pass
                         # If res not founded
                         else:
-                            if len(getPlayerWithMaxedInventory(getPlayerByNum(round_number))._inventory) >= 4:
+                            if getPlayerWithMaxedInventory(getPlayerByNum(round_number)) != None and len(getPlayerWithMaxedInventory(getPlayerByNum(round_number))._inventory) >= 4:
                                 # If they can fight
                                 if getPlayerByNum(round_number)._canFight == True:
                                     list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
