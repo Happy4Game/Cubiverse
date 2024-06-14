@@ -338,11 +338,11 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
     if len(list_fighting_players) == 2:
         if playerLeftWinned == True:
             screen.blit(myfont_big.render("Le joueur " + str(list_fighting_players[0]._number) + " a gagné !", 1, (100,100,100)), (400, 125))
-            list_fighting_players[0].attack(list_fighting_players[1])
+            dead : bool = list_fighting_players[0].attack(list_fighting_players[1])
             if len(list_fighting_players[1]._inventory) >= 1:
                 numberOfResLoosePlayer = len(list_fighting_players[1]._inventory)
                 # Si le personnage est mort
-                if list_fighting_players[0].attack(list_fighting_players[1]) == True:
+                if dead:
                     list_fighting_players[1]._inventory.clear()
                     gameboard_window.putRandomRes(numberOfResLoosePlayer)
                 else:
@@ -358,11 +358,11 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
 
         if playerRightWinned == True:
             screen.blit(myfont_big.render("Le joueur " + str(list_fighting_players[1]._number) + " a gagné !", 1, (100,100,100)), (400, 125))
-            list_fighting_players[1].attack(list_fighting_players[0])
+            dead : bool = list_fighting_players[1].attack(list_fighting_players[0])
             if len(list_fighting_players[0]._inventory) >= 1:
                 numberOfResLoosePlayer = len(list_fighting_players[0]._inventory)
                 # Si le personnage est mort
-                if list_fighting_players[1].attack(list_fighting_players[0]) == True:
+                if dead:
                     list_fighting_players[0]._inventory.clear()
                     gameboard_window.putRandomRes(numberOfResLoosePlayer)
                 else:    
