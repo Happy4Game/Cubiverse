@@ -9,7 +9,7 @@ from GameBoardWindows import GameBoardWindows
 from Player import Player
 from math import sqrt
 
-HOST = 'localhost'
+HOST = '192.168.1.36'
 PORT = 12345
 
 SCREEN_WIDTH = 1280
