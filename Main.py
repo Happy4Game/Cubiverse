@@ -341,7 +341,7 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
             dead : bool = list_fighting_players[0].attack(list_fighting_players[1])
             if len(list_fighting_players[1]._inventory) >= 1:
                 numberOfResLoosePlayer = len(list_fighting_players[1]._inventory)
-                # Si le personnage est mort
+                # If the player is dead
                 if dead:
                     list_fighting_players[1]._inventory.clear()
                     gameboard_window.putRandomRes(numberOfResLoosePlayer)
@@ -361,7 +361,7 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
             dead : bool = list_fighting_players[1].attack(list_fighting_players[0])
             if len(list_fighting_players[0]._inventory) >= 1:
                 numberOfResLoosePlayer = len(list_fighting_players[0]._inventory)
-                # Si le personnage est mort
+                # If the player is dead
                 if dead:
                     list_fighting_players[0]._inventory.clear()
                     gameboard_window.putRandomRes(numberOfResLoosePlayer)
