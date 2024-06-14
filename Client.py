@@ -9,7 +9,7 @@ from GameBoardWindows import GameBoardWindows
 from Player import Player
 from math import sqrt
 
-HOST = 'localhost'
+HOST = '192.168.1.36'
 PORT = 12345
 
 SCREEN_WIDTH = 1280
@@ -284,6 +284,15 @@ def drawUI(player : Player) -> None:
     # Draw end of the round btn
     screen.blit(pygame.image.load("./assets/png/end_round.png").convert_alpha(), (993, 630))
 
+    # Draw show number of players
+    screen.blit(pygame.image.load("./assets/png/show_infos.png").convert_alpha(), (993, 550))
+
+    if show_infos:
+        for p in list_players:
+            if p._typeofclass != "UNDEFINED":
+                coordinate : tuple = (1280 / 4.5 + p._pos[1]*50,p._pos[0]*50)
+                screen.blit(pygame.image.load("./assets/png/number_" + str(p._number) + ".png").convert_alpha(), coordinate)
+
 def drawFight() -> None:
     """Draw fight
     """
@@ -377,9 +386,15 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
             screen.blit(myfont_big.render("Le joueur " + str(list_fighting_players[0]._number) + " a gagné !", 1, (100,100,100)), (400, 125))
             list_fighting_players[0].attack(list_fighting_players[1])
             if len(list_fighting_players[1]._inventory) >= 1:
-                # faire en sorte que le joueur perdant perde toutes ses gemmmes et qu'elles soient de nouveau redistribuée sur le plateau.
-                list_fighting_players[1]._inventory.clear()
-                # rajouter les 4 gemmes sur le plateau
+                numberOfResLoosePlayer = len(list_fighting_players[1]._inventory)
+                # Si le personnage est mort
+                if list_fighting_players[0].attack(list_fighting_players[1]) == True:
+                    list_fighting_players[1]._inventory.clear()
+                    gameboard_window.putRandomRes(numberOfResLoosePlayer)
+                else:
+                    if len(list_fighting_players[1]._inventory) >= 1:
+                        list_fighting_players[1]._inventory.pop()
+                        gameboard_window.putRandomRes(1)
             list_fighting_players[0]._maxrange = 0
             pygame.display.flip()
             pygame.time.delay(4000)
@@ -391,8 +406,14 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
             screen.blit(myfont_big.render("Le joueur " + str(list_fighting_players[1]._number) + " a gagné !", 1, (100,100,100)), (400, 125))
             list_fighting_players[1].attack(list_fighting_players[0])
             if len(list_fighting_players[0]._inventory) >= 1:
-                # faire en sorte que le joueur perdant perde toutes ses gemmmes et qu'elles soient de nouveau redistribuée sur le plateau.
-                list_fighting_players[0]._inventory.clear()
+                numberOfResLoosePlayer = len(list_fighting_players[0]._inventory)
+                # Si le personnage est mort
+                if list_fighting_players[1].attack(list_fighting_players[0]) == True:
+                    list_fighting_players[0]._inventory.clear()
+                    gameboard_window.putRandomRes(numberOfResLoosePlayer)
+                else:    
+                    list_fighting_players[0]._inventory.pop()
+                    gameboard_window.putRandomRes(1)
             list_fighting_players[1]._maxrange = 0
             pygame.display.flip()
             pygame.time.delay(4000)
@@ -535,6 +556,32 @@ def movePlayerToClosestType(player : Player, type_of_get_close : str):
                     if player.canMovePlayer(step):
                         break
 
+def endRound(round_number) -> int:
+    """End a round, must reassign the real round_number
+
+    Args:
+        round_number (int): actual round
+
+    Returns:
+        int: new round_number
+    """
+    if round_number + 1 > 4:    
+        playerFour.resetMaxMovement()
+        playerFour._canFight = True
+        round_number = 1
+    else:
+        if round_number == 1: 
+            playerOne.resetMaxMovement()
+            playerOne._canFight = True
+        elif round_number == 2:
+            playerTwo.resetMaxMovement()
+            playerTwo._canFight = True
+        elif round_number == 3:
+            playerThree.resetMaxMovement()
+            playerThree._canFight = True
+        round_number += 1      
+    return round_number
+    
 
 # pygame setup
 pygame.init()
@@ -543,9 +590,12 @@ myfont : pygame.font        = pygame.font.SysFont("monospace", 20)
 myfont_little : pygame.font = pygame.font.SysFont("monospace", 16)
 myfont_big : pygame.font    = pygame.font.SysFont("monospace", 40)
 
+pygame.display.set_icon(pygame.image.load("./assets/png/cubiverse_32x32.png"))
+pygame.display.set_caption('Cubiverse')
 screen  = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 clock   = pygame.time.Clock()
 running = True
+show_infos : bool = False
 
 
 while running:
@@ -557,6 +607,10 @@ while running:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN:
             if GAMESTATUS == GameState.GAMELAUNCHED:
+
+                # If a player want to show number of each player
+                if getButtonPressed(pygame.mouse.get_pos(), (993, 550), (277,68)):
+                    show_infos = not show_infos
 
                 # If a player is in mouse pos                
                 if isCellOccuped(getGameBoardPositionByMouse(pygame.mouse.get_pos())) and getPlayerByPos(getGameBoardPositionByMouse(pygame.mouse.get_pos()))._number != round_number:
@@ -571,26 +625,11 @@ while running:
                     if getPlayerByNum(round_number).canMovePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos())):
                         # Move player if it's their round
                         getPlayerByNum(round_number).movePlayer(getGameBoardPositionByMouse(pygame.mouse.get_pos()))
-                        # Disable Fight option
-                        getPlayerByNum(round_number)._canFight = False
                     
                 # If the end turn btn is pressed
                 if (getButtonPressed(pygame.mouse.get_pos(), (993, 630), (277,68))):
-                    if round_number + 1 > 4:    
-                        playerFour.resetMaxMovement()
-                        playerFour._canFight = True
-                        round_number = 1
-                    else:
-                        if round_number == 1: 
-                            playerOne.resetMaxMovement()
-                            playerOne._canFight = True
-                        elif round_number == 2:
-                            playerTwo.resetMaxMovement()
-                            playerTwo._canFight = True
-                        elif round_number == 3:
-                            playerThree.resetMaxMovement()
-                            playerThree._canFight = True
-                        round_number += 1      
+                    round_number = endRound(round_number)
+
             elif GAMESTATUS == GameState.CHOOSEMENU:
                 # Player 1 button
                 if getButtonPressed(pygame.mouse.get_pos(), (400,250), (100,100)):
@@ -661,12 +700,7 @@ while running:
                     random_dice_value_one = randint(1,6)
                 elif getButtonPressed(pygame.mouse.get_pos(), (1060,470), (200,30)):
                     random_dice_value_two = randint(1,6)
-                # If the 2 dices have been rolled
-                if random_dice_value_one != 0 and random_dice_value_two != 0:
-                    if random_dice_value_two < random_dice_value_one:
-                        playerLeftWinned = True
-                    else:
-                        playerRightWinned = True
+                
 
     # If player is not defined, pass round automaticaly
     if getPlayerByNum(round_number)._typeofclass == "UNDEFINED":
@@ -719,13 +753,53 @@ while running:
                                 list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
                                 list_fighting_players.append(getPlayerByNum(round_number))
                                 GAMESTATUS = GameState.FIGHT
+                        # If the player is minor
+                        else:
+                            movePlayerToClosestType(getPlayerByNum(round_number), "res")
+                            # If no resource on the map
+                            if getPlayerByNum(round_number)._canFight == True:
+                                list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
+                                list_fighting_players.append(getPlayerByNum(round_number))
+                                GAMESTATUS = GameState.FIGHT
 
                     # If inventory of other players are not full
                     else:
                         movePlayerToClosestType(getPlayerByNum(round_number), "res")
+                        # If no resource on the map
+                        if getPlayerByNum(round_number)._canFight == True:
+                                if getPlayerByNum(round_number)._typeofclass == "IA_FIGHTER":
+                                    list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
+                                    list_fighting_players.append(getPlayerByNum(round_number))
+                                    GAMESTATUS = GameState.FIGHT
+                                # If the player is Minor
+                                else:
+                                    # TODO, if there is no fighter then fight
+                                    fighter_founded : bool = False
+                                    for p in list_players:
+                                        if p._typeofclass == "IA_FIGHTER":
+                                            fighter_founded = True
+                                    # Fighter founded, just get close to the center of map
+                                    if fighter_founded:
+                                        movePlayerToClosestType(getPlayerByNum(round_number), "m")
+                                    else:
+                                        list_fighting_players.append(getPlayerWithMaxedInventory(getPlayerByNum(round_number)))
+                                        list_fighting_players.append(getPlayerByNum(round_number))
+                                        GAMESTATUS = GameState.FIGHT
 
+                round_number = endRound(round_number)
+                pygame.time.delay(100)
     elif GAMESTATUS == GameState.FIGHT:
         drawFight()
+        if list_fighting_players[0]._typeofclass.startswith("IA") and random_dice_value_one == 0:
+            random_dice_value_one = randint(1,6)
+        if list_fighting_players[1]._typeofclass.startswith("IA") and random_dice_value_two == 0:
+            random_dice_value_two = randint(1,6)
+        # If the 2 dices have been rolled
+        if random_dice_value_one != 0 and random_dice_value_two != 0:
+            if random_dice_value_two < random_dice_value_one:
+                playerLeftWinned = True
+            else:
+                playerRightWinned = True
         drawDice((350,325), random_dice_value_one)
         drawDice((875,325), random_dice_value_two)
         GAMESTATUS, playerLeftWinned, playerRightWinned, list_fighting_players, random_dice_value_one, random_dice_value_two = drawWinnerFight(playerLeftWinned, playerRightWinned)

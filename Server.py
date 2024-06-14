@@ -3,6 +3,10 @@ import threading
 import json
 from GameState import GameState
 
+HOST = 'localhost'
+PORT = 12345
+
+
 class Server:
     def __init__(self):
         self.clients = []
@@ -89,11 +93,11 @@ class Server:
         for client in self.clients:
             client.send(message.encode('utf-8'))
 
-    def start_server(self):
+   def start_server():
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server_socket.bind(('localhost', 12345))
+        server_socket.bind((HOST, PORT))
         server_socket.listen()
-        print("Server started and listening on port 12345")
+        print("Server started and listening on port", PORT)
 
         while True:
             client_socket, client_address = server_socket.accept()

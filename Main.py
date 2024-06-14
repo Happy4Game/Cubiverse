@@ -366,8 +366,9 @@ def drawWinnerFight(playerLeftWinned : bool, playerRightWinned : bool) -> (GameS
                     list_fighting_players[0]._inventory.clear()
                     gameboard_window.putRandomRes(numberOfResLoosePlayer)
                 else:    
-                    list_fighting_players[0]._inventory.pop()
-                    gameboard_window.putRandomRes(1)
+                    if len(list_fighting_players[0]._inventory) >= 1:
+                        list_fighting_players[0]._inventory.pop()
+                        gameboard_window.putRandomRes(1)
             list_fighting_players[1]._maxrange = 0
             pygame.display.flip()
             pygame.time.delay(4000)
