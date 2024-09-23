@@ -1,0 +1,8 @@
+site_name: Documentation de Cubiverse
+nav:
+  - Accueil: index.md
+  - Règles: rules.md
+  - Installation: install.md
+  - Fonctionnalités: features.md
+theme: readthedocs
+repo_url: https://github.com/Happy4Game/Cubiverse/ 
